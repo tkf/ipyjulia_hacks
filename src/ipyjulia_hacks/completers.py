@@ -80,32 +80,26 @@ class JuliaCompleter(Singleton):
 
 
 
-patch_ipcompleter_info = None
+class IPCompleterPatcher(Singleton):
+
+    def __init__(self):
+        self.patch_ipcompleter(IPCompleter, JuliaCompleter.instance())
+
+    def patch_ipcompleter(self, IPCompleter, jlcompleter):
+        orig__completions = IPCompleter._completions
+
+        def _completions(self, full_text: str, offset: int, **kwargs):
+            completions = jlcompleter.julia_completions(full_text, offset)
+            if completions:
+                yield from completions
+            else:
+                yield from orig__completions(self, full_text, offset, **kwargs)
+
+        IPCompleter._completions = _completions
+
+        self.orig__completions = orig__completions
+        self.patched__completions = _completions
+        self.IPCompleter = IPCompleter
 
 
-def patch_ipcompleter():
-    global patch_ipcompleter_info
-    if patch_ipcompleter_info is not None:
-        return
-
-    patch_ipcompleter_info = _patch_ipcompleter(IPCompleter,
-                                                JuliaCompleter.instance())
-
-
-def _patch_ipcompleter(IPCompleter, jlcompleter):
-    orig__completions = IPCompleter._completions
-
-    def _completions(self, full_text: str, offset: int, **kwargs):
-        completions = jlcompleter.julia_completions(full_text, offset)
-        if completions:
-            yield from completions
-        else:
-            yield from orig__completions(self, full_text, offset, **kwargs)
-
-    IPCompleter._completions = _completions
-
-    return SimpleNamespace(
-        orig__completions=orig__completions,
-        patched__completions=_completions,
-        IPCompleter=IPCompleter,
-    )
+patch_ipcompleter = IPCompleterPatcher.instance
