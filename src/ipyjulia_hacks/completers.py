@@ -12,7 +12,9 @@ class JuliaCompleter(Singleton):
     def __init__(self, julia=None):
         from julia import Julia
         self.julia = Julia() if julia is None else julia
-        self.magic_re = re.compile(r"\s*%%?julia\s*")
+        self.magic_re = re.compile(r".*(\s|^)%%?julia\s*")
+        # With this regexp, "=%julia Cha<tab>" won't work.  But maybe
+        # it's better to be conservative here.
 
     @cached_property
     def jlcomplete_texts(self):
