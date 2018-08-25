@@ -1,4 +1,5 @@
 from types import SimpleNamespace
+import re
 
 from IPython.core.completer import Completion, IPCompleter
 from cached_property import cached_property
@@ -9,6 +10,7 @@ class JuliaCompleter:
     def __init__(self, julia=None):
         from julia import Julia
         self.julia = Julia() if julia is None else julia
+        self.magic_re = re.compile(r"\s*%%?julia\s*")
 
     @cached_property
     def jlcomplete_texts(self):
@@ -56,9 +58,10 @@ class JuliaCompleter:
 
     def julia_completions(self, full_text: str, offset: int):
         self.last_text = full_text
-        if not full_text.startswith("%%julia"):
+        match = self.magic_re.match(full_text)
+        if not match:
             return []
-        prefix_len = len("%%julia")
+        prefix_len = match.end()
         jl_pos = offset - prefix_len
         jl_code = full_text[prefix_len:]
         texts, (jl_start, jl_end), should_complete = \
