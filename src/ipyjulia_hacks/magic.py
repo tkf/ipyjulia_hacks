@@ -1,6 +1,20 @@
+from IPython.core.magic import Magics
+from julia import magic
+
+from .core import initialized_api
+
+
+class JuliaMagicsEnhanced(magic.JuliaMagics):
+
+    def __init__(self, shell):
+        super().__init__(shell)
+
+        # Replace core.Julia with JuliaAPI:
+        self._julia = initialized_api()
+
+
 def load_ipython_extension(ip):
-    from julia import magic
-    magic.load_ipython_extension(ip)
+    ip.register_magics(JuliaMagicsEnhanced)
 
     from . import completers
 
