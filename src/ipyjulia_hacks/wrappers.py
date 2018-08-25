@@ -1,5 +1,6 @@
 from types import FunctionType
 import functools
+import json
 
 
 unspecified = object()
@@ -110,6 +111,50 @@ class JuliaObject(object):
 
     def __or__(self, other):
         return self.__julia.eval("|")(self.__jlwrap, other)
+
+    def _repr_mimebundle_(self, include=None, exclude=None):
+        mimes = include or [
+            "text/plain",
+            "text/html",
+            "text/markdown",
+            "text/latex",
+            "application/json",
+            "application/javascript",
+            "application/pdf",
+            "image/png",
+            "image/jpeg",
+            "image/svg+xml",
+        ]
+        exclude = exclude or []
+
+        showable = self.__julia.eval("showable")
+        showraw = self.__julia.eval("""
+        (obj, mimetype) -> begin
+            io = IOBuffer()
+            show(io, mimetype, obj)
+            take!(io)
+        end
+        """)
+
+        format_dict = {}
+        for mimetype in mimes:
+            if mimetype in exclude:
+                continue
+            if showable(mimetype, self.__jlwrap):
+                data = showraw(self.__jlwrap, mimetype)
+                if (mimetype.startswith("text/") or
+                        mimetype in ("application/javascript",
+                                     "image/svg+xml")):
+                    data = data.decode()
+                elif mimetype == "application/json":
+                    data = json.loads(data)
+                else:
+                    data = bytes(data)
+                format_dict[mimetype] = data
+        return format_dict
+
+# https://ipython.readthedocs.io/en/stable/api/generated/IPython.core.formatters.html#IPython.core.formatters.DisplayFormatter.format
+# https://ipython.readthedocs.io/en/stable/config/integrating.html#MyObject._repr_mimebundle_
 
 
 def peal(obj):
