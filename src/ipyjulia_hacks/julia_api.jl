@@ -5,10 +5,11 @@ module JuliaAPI
 end
 using PyCall: pyjlwrap_new
 
-function eval_str(m::Module, code::String;
+function eval_str(code::String;
+                  scope::Module = Main,
                   # auto_jlwrap = true,
                   force_jlwrap = false)
-    result = Base.eval(m, Meta.parse(strip(code)))
+    result = Base.eval(scope, Meta.parse(strip(code)))
     if force_jlwrap
         return pyjlwrap_new(result)
     # elseif auto_jlwrap
@@ -16,8 +17,6 @@ function eval_str(m::Module, code::String;
     end
     return result
 end
-
-eval_str(code::String; kwargs...) = eval_str(Main, code; kwargs...)
 
 # Not sure if I need it:
 #=

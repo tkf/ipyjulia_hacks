@@ -25,11 +25,6 @@ class JuliaObject(object):
         self.__jlwrap = jlwrap
         self.__julia = julia
 
-    def __peal(self, other):
-        if isinstance(other, JuliaObject):
-            return other.__jlwrap
-        return other
-
     def __str__(self):
         return self.__julia.string(self.__jlwrap)
 
@@ -117,13 +112,16 @@ class JuliaObject(object):
         return self.__julia.eval("|")(self.__jlwrap, other)
 
 
-def make_wrapper(fun):
+def peal(obj):
+    return obj._JuliaObject__jlwrap if isinstance(obj, JuliaObject) else obj
+
+
+def autopeal(fun):
     @functools.wraps(fun)
     def wrapper(self, *args, **kwds):
         # Peal off all arguments if they are wrapped by JuliaObject.
         # This is required for, e.g., Main.map(Main.identity, range(3))
         # to work.
-        peal = self._JuliaObject__peal
         args = [peal(a) for a in args]
         kwds = {k: peal(v) for (k, v) in kwds.items()}
         return fun(self, *args, **kwds)
@@ -138,4 +136,4 @@ for name, fun in vars(JuliaObject).items():
     if not isinstance(fun, FunctionType):
         continue
     # TODO: skip single-argument (i.e., `self`-only) methods (optimization)
-    setattr(JuliaObject, name, make_wrapper(fun))
+    setattr(JuliaObject, name, autopeal(fun))
