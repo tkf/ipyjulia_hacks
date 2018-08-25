@@ -4,8 +4,10 @@ import re
 from IPython.core.completer import Completion, IPCompleter
 from cached_property import cached_property
 
+from .utils import Singleton
 
-class JuliaCompleter:
+
+class JuliaCompleter(Singleton):
 
     def __init__(self, julia=None):
         from julia import Julia
@@ -73,15 +75,6 @@ class JuliaCompleter:
         # if not should_complete:
         #     return []
         return completions
-
-    @classmethod
-    def instance(cls, *args, **kwargs):
-        try:
-            return cls.__initialized
-        except AttributeError:
-            pass
-        cls.__initialized = self = cls(*args, **kwargs)
-        return self
 
 
 
