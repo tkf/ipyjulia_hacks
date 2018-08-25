@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from .utils import Singleton
+from .utils import Singleton, reloadall
 from .julia_api import JuliaAPI
 
 
@@ -28,3 +28,16 @@ def initialized_api(*args, **kwargs):
 
 def get_api(default=None):
     return APIInitializer.initialized(default=default).api
+
+
+def revise():
+    """Ad-hoc hot reload."""
+    import ipyjulia_hacks
+    reloadall(ipyjulia_hacks, [
+        ipyjulia_hacks.utils,
+        ipyjulia_hacks.wrappers,
+        ipyjulia_hacks.julia_api,
+        ipyjulia_hacks.core,
+        ipyjulia_hacks.completers,
+        ipyjulia_hacks.magic,
+    ])
