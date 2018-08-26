@@ -4,6 +4,7 @@
 /.coverage
 /.tox
 /MANIFEST
+/Manifest.toml
 /dist
 /doc/build
 /src/*.egg-info
