@@ -13,3 +13,6 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     if config.getoption("julia"):
         initialized_api()
+        # The above call initialize the global julia instance. It is
+        # then used via `julia` fixture:
+        # [[./src/ipyjulia_hacks/tests/conftest.py::def julia]]
