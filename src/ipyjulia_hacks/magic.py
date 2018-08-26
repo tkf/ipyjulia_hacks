@@ -2,6 +2,7 @@ from IPython.core.magic import Magics
 from julia import magic
 
 from .core import initialized_api
+from .julia_api import banner
 
 
 class JuliaMagicsEnhanced(magic.JuliaMagics):
@@ -11,6 +12,7 @@ class JuliaMagicsEnhanced(magic.JuliaMagics):
 
         # Replace core.Julia with JuliaAPI:
         self._julia = initialized_api()
+        banner(self._julia)
 
 
 def load_ipython_extension(ip):

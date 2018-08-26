@@ -93,3 +93,12 @@ class JuliaAPI(object):
             return self.maybe_wrap(self.getproperty(obj, jl_name(name)))
         except Exception:
             raise AttributeError(name)
+
+
+def banner(julia, **kwargs):
+    banner = julia.eval("""
+    io = IOBuffer()
+    Base.banner(IOContext(io, :color=>true))
+    String(take!(io))
+    """)
+    print(banner.rstrip(), **kwargs)

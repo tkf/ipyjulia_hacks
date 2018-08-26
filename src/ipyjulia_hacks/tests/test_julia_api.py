@@ -1,5 +1,8 @@
+import io
+
 import pytest
 
+from ..julia_api import banner
 from ..wrappers import JuliaObject
 
 
@@ -23,3 +26,9 @@ def test_multiline_eval(julia):
     3
     """)
     assert ans == 3
+
+
+def test_banner(julia):
+    buf = io.StringIO()
+    banner(julia, file=buf)
+    assert "https://docs.julialang.org" in buf.getvalue()
