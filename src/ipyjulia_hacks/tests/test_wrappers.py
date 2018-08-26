@@ -3,12 +3,18 @@ def test_peal(Main):
     assert all(xs == [0, 1, 2])
 
 
-def test_wrapped_dict(Main, julia):
-    dct = julia.eval("dct = Dict()", force_jlwrap=True)
+def test_wrapped_dict(julia):
+    dct = julia.eval("Dict()")
     dct["key"] = "value"
-    assert Main.dct == {"key": "value"}
+    unwrapped = julia.maybe_unwrap(dct)
+    assert unwrapped == {"key": "value"}
 
 
 def test_symbol_eval(julia):
     a = julia.eval(":a")
+    assert julia.eval("a -> a isa Symbol")(a)
+
+
+def test_symbol_call(julia):
+    a = julia.eval("() -> :a")()
     assert julia.eval("a -> a isa Symbol")(a)

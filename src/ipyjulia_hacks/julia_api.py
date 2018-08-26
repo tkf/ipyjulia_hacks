@@ -1,6 +1,6 @@
 import sys
 
-from .wrappers import JuliaObject, autopeal
+from .wrappers import JuliaObject, autopeal, peal
 
 
 def jl_name(name):
@@ -22,6 +22,9 @@ class JuliaAPI(object):
         self.api = api
         get_jlwrap_prototype = eval_str("get_jlwrap_prototype", scope=api)
         self.jlwrap_type = type(get_jlwrap_prototype())
+
+        # Use wrap=False when getting wrapcall to avoid infinite recursion.
+        self.wrapcall = self.eval("wrapcall", wrap=False, scope=self.api)
 
         # After this point, self.<julia_name> works:
         self.getproperty = self.getproperty_str
@@ -81,6 +84,9 @@ class JuliaAPI(object):
             return JuliaObject(obj, self)
         else:
             return obj
+
+    def maybe_unwrap(self, obj):
+        return self.eval("identity", wrap=False, scope=self.api)(peal(obj))
 
     def getattr(self, obj, name):
         try:

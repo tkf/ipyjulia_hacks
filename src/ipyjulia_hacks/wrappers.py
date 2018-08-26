@@ -44,7 +44,7 @@ class JuliaObject(object):
         return self.__julia.py_names(self.__jlwrap)
 
     def __call__(self, *args, **kwargs):
-        return self.__jlwrap(*args, **kwargs)
+        return self.__julia.wrapcall(self.__jlwrap, *args, **kwargs)
 
     def __len__(self):
         return len(self.__jlwrap)

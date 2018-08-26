@@ -37,6 +37,14 @@ _wrap(obj::Union{
 # BitArray, etc.).
 
 
+"""
+    wrapcall(f, args...; kwargs...)
+
+Wrap what `f(args...; kwargs...)` returns.
+"""
+wrapcall(f::Base.Callable, args...; kwargs...) = _wrap(f(args...; kwargs...))
+
+
 set_var(name::String, value) = set_var(Symbol(name), value)
 
 function set_var(name::Symbol, value)
