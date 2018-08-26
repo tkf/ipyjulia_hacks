@@ -10,6 +10,11 @@ def test_wrapped_dict(julia):
     assert unwrapped == {"key": "value"}
 
 
+def test_unwrapped_dict(julia):
+    dct = julia.eval('Dict("a" => 1)', wrap=False)
+    assert dct == {"a": 1}
+
+
 def test_symbol_eval(julia):
     a = julia.eval(":a")
     assert julia.eval("a -> a isa Symbol")(a)

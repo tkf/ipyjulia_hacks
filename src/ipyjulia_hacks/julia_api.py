@@ -52,8 +52,8 @@ class JuliaAPI(object):
         assert wrap in (True, False, None)
         if wrap:
             kwargs.setdefault('force_jlwrap', True)
-        elif wrap is None:
-            kwargs.setdefault('auto_jlwrap', True)
+        elif wrap is False:
+            kwargs.setdefault('auto_jlwrap', False)
         ans = self.eval_str(code, **kwargs)
         if wrap in (True, None):
             return self.maybe_wrap(ans)
