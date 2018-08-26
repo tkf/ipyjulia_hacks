@@ -6,11 +6,13 @@ module JuliaAPI
 end
 using PyCall: pyjlwrap_new
 
-function eval_str(code::String;
+
+function eval_str(code::AbstractString;
                   scope::Module = Main,
+                  filename::AbstractString = "string",
                   auto_jlwrap = true,
                   force_jlwrap = false)
-    result = Base.eval(scope, Meta.parse(strip(code)))
+    result = include_string(scope, code, filename)
     if force_jlwrap
         return pyjlwrap_new(result)
     elseif auto_jlwrap

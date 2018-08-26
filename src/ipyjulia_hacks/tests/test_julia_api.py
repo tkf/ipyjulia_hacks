@@ -14,3 +14,12 @@ def test_object__ipython_canary_method_should_not_exist_(julia):
 def test_api__ipython_canary_method_should_not_exist_(julia):
     with pytest.raises(AttributeError):
         julia._ipython_canary_method_should_not_exist_
+
+
+def test_multiline_eval(julia):
+    ans = julia.eval("""
+    1
+    2
+    3
+    """)
+    assert ans == 3
