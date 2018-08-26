@@ -27,7 +27,9 @@ def initialized_api(*args, **kwargs):
 
 
 def get_api(default=None):
-    return APIInitializer.initialized(default=default).api
+    initializer = APIInitializer.initialized(default=default)
+    if initializer is not None:
+        return initializer.api
 
 
 def revise():

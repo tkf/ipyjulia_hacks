@@ -1,21 +1,13 @@
 import pytest
 
-from .. import initialized_api
-
-
-def pytest_addoption(parser):
-    parser.addoption(
-        "--no-julia",
-        action="store_false",
-        dest="julia",
-        default=True,
-        help="Skip tests that require julia.",
-    )
+from .. import get_api
 
 
 @pytest.fixture
-def julia(request):
+def julia():
     """ pytest fixture for providing a `JuliaAPI` instance. """
-    if not request.config.getoption("julia"):
-        pytest.skip("--no-julia is passed")
-    return initialized_api()
+    julia = get_api()
+    if julia is None:
+        pytest.skip("JuliaAPI is not initialized.")
+    return julia
+# JuliaAPI has to be initialized elsewhere (e.g., in top-level conftest.py)
