@@ -6,6 +6,8 @@ julia:
 addons:
   apt:
     packages:
-      - python3-tox
+      - python3-pip
+before_install:
+  - pip3 install --quiet --upgrade tox
 script:
   - tox
