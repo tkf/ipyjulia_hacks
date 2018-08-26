@@ -5,7 +5,8 @@ julia:
   - '1.0'
 env:
   global:
-    PYTHON=.tox/py3/bin/python
+    # Tell PyCall.jl to use python executable in virtualenv:
+    PYTHON=python
 addons:
   apt:
     packages:
