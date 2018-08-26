@@ -2,31 +2,39 @@ module JuliaAPI
 
 @static if VERSION >= v"0.7-"
     import REPL
+    import Dates
 end
 using PyCall: pyjlwrap_new
 
 function eval_str(code::String;
                   scope::Module = Main,
-                  # auto_jlwrap = true,
+                  auto_jlwrap = true,
                   force_jlwrap = false)
     result = Base.eval(scope, Meta.parse(strip(code)))
     if force_jlwrap
         return pyjlwrap_new(result)
-    # elseif auto_jlwrap
-    #     return _wrap(result)
+    elseif auto_jlwrap
+        return _wrap(result)
     end
     return result
 end
 
-# Not sure if I need it:
-#=
-_wrap(result::Union{
-    # Types to be wrapped:
-    Symbol,
-}) = pyjlwrap_new(result)
 
-_wrap(result) = result
-=#
+_wrap(obj::Any) = pyjlwrap_new(obj)
+# Wrap the object if PyCall would convert it to some
+
+_wrap(obj::Union{
+    Nothing,
+    Number,
+    Array,
+    AbstractString,  # should it be just String?
+    Dates.AbstractTime,
+}) = obj
+# It's OK to include some types that are not supported PyCall.  In
+# that case, those objects are passed through pyjlwrap_new anyway.
+# What should be avoided here is to include some types that would be
+# converted by PyCall in an irreversible manner (e.g., Symbol,
+# BitArray, etc.).
 
 
 set_var(name::String, value) = set_var(Symbol(name), value)

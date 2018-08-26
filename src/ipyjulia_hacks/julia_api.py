@@ -27,7 +27,7 @@ class JuliaAPI(object):
         self.getproperty = self.getproperty_str
 
     @autopeal
-    def eval(self, code, *, wrap=True, **kwargs):
+    def eval(self, code, *, wrap=None, **kwargs):
         """
         Evaluate `code` in `Main` scope of Julia.
 
@@ -38,15 +38,21 @@ class JuliaAPI(object):
 
         Keyword Arguments
         -----------------
-        wrap : bool
-            If `True` (default), wrap the output by a Python interface
+        wrap : {True, False, None}
+            If `None` (default), wrap the output by a Python interface
             (`JuliaObject`) for some appropriate Julia objects.
+            Force wrapping by passing None and
         scope : JuliaObject or PyCall.jlwrap
             A Julia module (default to `Main`).
 
         """
-        ans = self.eval_str(code, **kwargs)
+        assert wrap in (True, False, None)
         if wrap:
+            kwargs.setdefault('force_jlwrap', True)
+        elif wrap is None:
+            kwargs.setdefault('auto_jlwrap', True)
+        ans = self.eval_str(code, **kwargs)
+        if wrap in (True, None):
             return self.maybe_wrap(ans)
         return ans
 
