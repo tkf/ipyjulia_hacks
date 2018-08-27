@@ -23,3 +23,31 @@ def test_symbol_eval(julia):
 def test_symbol_call(julia):
     a = julia.eval("() -> :a")()
     assert julia.eval("a -> a isa Symbol")(a)
+
+
+def test_symbol_to_str(julia):
+    a = julia.eval(":a")
+    assert str(a) == "a"
+
+
+def test_docstring(julia):
+    sin = julia.eval("sin")
+    assert isinstance(sin.__doc__, str)
+    assert "sine" in sin.__doc__
+
+
+def test_array_contains(julia):
+    a = julia.eval('[1, 2, 3]', wrap=True)
+    assert 1 in a
+
+
+def test_add_missing(julia):
+    missing = julia.missing
+    mp1 = missing + 1
+    assert julia.eval("===")(mp1, missing)
+
+
+def test_string_mul(julia):
+    a = julia.eval('"a"', wrap=True)
+    b = julia.eval('"b"', wrap=True)
+    assert a * b == "ab"

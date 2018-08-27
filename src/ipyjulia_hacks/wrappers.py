@@ -101,7 +101,7 @@ class JuliaObject(object):
         self.__julia.delete_b(self.__jlwrap, *key)
 
     def __contains__(self, item):
-        return self.__julia.eval("in")(self.__jlwrap, item)
+        return self.__julia.eval("in")(item, self.__jlwrap)
 
     def __add__(self, other):
         return self.__julia.eval("+")(self.__jlwrap, other)
