@@ -41,10 +41,22 @@ def test_array_contains(julia):
     assert 1 in a
 
 
-def test_add_missing(julia):
+def test_missing(julia):
     missing = julia.missing
-    mp1 = missing + 1
-    assert julia.eval("===")(mp1, missing)
+
+    def isa_missing(x):
+        return julia.eval("===")(x, missing)
+
+    assert isa_missing(missing + 1)
+    assert isa_missing(missing - 1)
+    assert isa_missing(missing * 1)
+    assert isa_missing(missing / 1)
+    # assert isa_missing(missing // 1)
+    d, r = divmod(missing, 1)
+    assert isa_missing(d)
+    assert isa_missing(r)
+    assert isa_missing(missing % 1)
+    assert isa_missing(missing ** 1)
 
 
 def test_string_mul(julia):
