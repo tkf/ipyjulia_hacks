@@ -48,6 +48,48 @@ class JuliaAPI(object):
         scope : JuliaObject or PyCall.jlwrap
             A Julia module (default to `Main`).
 
+        Examples
+        --------
+        .. (this is for checking availability in doctest)
+           >>> _ = getfixture("julia")
+
+        >>> from ipyjulia_hacks import get_api
+        >>> jlapi = get_api()
+
+        By default, most of Julia objects returned by this function
+        are the the Python wrapper `.JuliaObject`.  This object just
+        has a reference to the object held by Julia so that passing it
+        back to Julia is easy.  However, you can suppress this
+        behavior by passing `wrap=False`.  For example:
+
+        >>> _ = jlapi.eval("dct = Dict()")
+        >>> dct_jl = jlapi.eval("dct")
+        >>> dct_py = jlapi.eval("dct", wrap=False)
+        >>> dct_jl
+        <JuliaObject Dict{Any,Any}()>
+        >>> dct_py
+        {}
+        >>> assert isinstance(dct_py, dict)
+        >>> dct_jl["a"] = 1
+        >>> dct_py["b"] = 2
+        >>> jlapi.eval("dct")
+        <JuliaObject Dict{Any,Any}("a"=>1)>
+
+        Note that `dct` object (living in Julia's `Main`) does not
+        have the key `"b"`.  This is because `dct_py` is a copy of
+        the original Julia object.
+
+        Some objects such as `Array` are not wrapped by `.JuliaObject`
+        by default.  Julia `Array` is automatically converted to
+        `numpy.ndarray` in a copy-free manner by PyCall.jl:
+
+        >>> _ = jlapi.eval("xs = [1, 2, 3]")
+        >>> xs = jlapi.eval("xs")
+        >>> xs
+        array([1, 2, 3], dtype=int64)
+        >>> xs[0] = 100
+        >>> jlapi.eval("xs")
+        array([100,   2,   3], dtype=int64)
         """
         assert wrap in (True, False, None)
         if wrap:
@@ -89,6 +131,9 @@ class JuliaAPI(object):
         return self.eval("identity", wrap=False, scope=self.api)(peal(obj))
 
     def getattr(self, obj, name):
+        """
+        Get attribute (property) named `name` of Julia object `obj`.
+        """
         try:
             return self.maybe_wrap(self.getproperty(obj, jl_name(name)))
         except Exception:

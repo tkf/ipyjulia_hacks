@@ -1,3 +1,22 @@
+"""
+Pythonic wrapper of Julia objects.
+
+.. (this is for checking availability in doctest)
+   >>> _ = getfixture("julia")
+
+>>> from ipyjulia_hacks import get_api
+>>> jlapi = get_api()
+>>> nt = jlapi.eval("(a = 1, b = 2)")
+>>> nt.a
+1
+>>> nt.b
+2
+>>> nt[1]
+1
+>>> nt[2]
+2
+"""
+
 from types import FunctionType
 import functools
 import json

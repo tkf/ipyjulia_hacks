@@ -5,6 +5,14 @@ from .julia_api import JuliaAPI
 
 
 def make_api(julia):
+    """
+    Initialize `.JuliaAPI` using PyJulia.
+
+    Parameters
+    ----------
+    julia : julia.Julia
+        PyJulia's julia interface.
+    """
     julia_api_path = Path(__file__).parent.joinpath("julia_api.jl")
     api, eval_str = julia.eval("""
     path -> let m = Module()
@@ -23,10 +31,30 @@ class APIInitializer(Singleton):
 
 
 def initialize_api(*args, **kwargs):
+    """
+    Initialize `.JuliaAPI`.
+
+    Positional and keyword arguments are passed directly to `julia.Julia`
+
+    >>> from ipyjulia_hacks import initialize_api
+    >>> initialize_api(jl_runtime_path="PATH/TO/CUSTOM/JULIA") # doctest: +SKIP
+    <JuliaAPI ...>
+    """
     return APIInitializer.instance(*args, **kwargs).api
 
 
 def get_api(default=None):
+    """
+    Get pre-initialized `.JuliaAPI` instance or `None` if not ready.
+
+    .. (this is for checking availability in doctest)
+       >>> _ = getfixture("julia")
+
+    >>> from ipyjulia_hacks import get_api
+    >>> jlapi = get_api()
+    >>> jlapi.eval("1 + 1")
+    2
+    """
     initializer = APIInitializer.initialized(default=default)
     if initializer is not None:
         return initializer.api
