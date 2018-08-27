@@ -15,6 +15,8 @@ Pythonic wrapper of Julia objects.
 1
 >>> nt[2]
 2
+>>> len(nt)
+2
 """
 
 from types import FunctionType
@@ -66,7 +68,7 @@ class JuliaObject(object):
         return self.__julia.wrapcall(self.__jlwrap, *args, **kwargs)
 
     def __len__(self):
-        return len(self.__jlwrap)
+        return self.__julia.length(self.__jlwrap)
 
     def __getitem__(self, key):
         if not isinstance(key, tuple):
