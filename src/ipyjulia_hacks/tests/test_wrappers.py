@@ -1,3 +1,8 @@
+import pytest
+
+from ..wrappers import JuliaObject
+
+
 def test_peal(Main):
     xs = Main.map(Main.identity, range(3))
     assert all(xs == [0, 1, 2])
@@ -63,3 +68,33 @@ def test_string_mul(julia):
     a = julia.eval('"a"', wrap=True)
     b = julia.eval('"b"', wrap=True)
     assert a * b == "ab"
+
+
+def test_bitarray_lshift(julia):
+    x = julia.eval("""
+    x = BitArray([0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1])
+    """)
+    actual = x << 2
+    desired = julia.eval("x << 2")
+    assert actual == desired
+    # assert isinstance(actual, JuliaObject)
+    # assert isinstance(desired, JuliaObject)
+
+
+def test_bitarray_rshift(julia):
+    x = julia.eval("""
+    x = BitArray([0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1])
+    """)
+    actual = x >> 2
+    desired = julia.eval("x >> 2")
+    assert actual == desired
+    # assert isinstance(actual, JuliaObject)
+    # assert isinstance(desired, JuliaObject)
+
+
+
+@pytest.mark.xfail(raises=AssertionError)
+def test_constructor(julia):
+    BitArray = julia.BitArray
+    ba = BitArray([1, 0, 1, 0])
+    assert isinstance(ba, JuliaObject)

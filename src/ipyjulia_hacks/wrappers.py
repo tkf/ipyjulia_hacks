@@ -82,6 +82,9 @@ class JuliaObject(object):
     def __call__(self, *args, **kwargs):
         return self.__julia.wrapcall(self.__jlwrap, *args, **kwargs)
 
+    def __eq__(self, other):
+        return self.__julia.eval("==")(self.__jlwrap, other)
+
     def __len__(self):
         return self.__julia.length(self.__jlwrap)
 
