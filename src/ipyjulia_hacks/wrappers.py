@@ -131,7 +131,7 @@ class JuliaObject(object):
         showraw = self.__julia.eval("""
         (obj, mimetype) -> begin
             io = IOBuffer()
-            show(io, mimetype, obj)
+            show(IOContext(io, :color => true), mimetype, obj)
             take!(io)
         end
         """)
