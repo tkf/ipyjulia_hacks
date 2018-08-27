@@ -103,6 +103,15 @@ class JuliaObject(object):
             key = (key,)
         self.__julia.delete_b(self.__jlwrap, *key)
 
+    def __iter__(self):
+        iterate = self.__julia.eval("iterate")
+        pair = iterate(self.__jlwrap)
+        while True:
+            if pair is None:
+                return
+            yield pair[1]
+            pair = iterate(self.__jlwrap, pair[2])
+
     def __contains__(self, item):
         return self.__julia.eval("in")(item, self.__jlwrap)
 
