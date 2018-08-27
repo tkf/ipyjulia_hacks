@@ -6,6 +6,9 @@ Pythonic wrapper of Julia objects.
 
 >>> from ipyjulia_hacks import get_api
 >>> jlapi = get_api()
+
+**Named tuple**:
+
 >>> nt = jlapi.eval("(a = 1, b = 2)")
 >>> nt.a
 1
@@ -19,6 +22,16 @@ Pythonic wrapper of Julia objects.
 2
 >>> {"a", "b"} <= set(dir(nt))
 True
+
+**Dictionary**:
+
+>>> dct = jlapi.eval('Dict("b" => 2)')
+>>> dct["a"] = 1
+>>> del dct["b"]
+>>> dct["a"]
+1
+>>> dct
+<JuliaObject Dict("a"=>1)>
 """
 
 from types import FunctionType
