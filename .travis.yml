@@ -4,8 +4,11 @@ python:
   - "3.6"
 env:
   global:
+    # Use the Python version specified by Travis inside tox:
+    - TOXENV=py
+
     # Tell PyCall.jl to use python executable in virtualenv:
-    PYTHON=python
+    - PYTHON=python
 
 before_install:
   - pip install --quiet tox coveralls
@@ -20,6 +23,7 @@ script:
   - tox -- --cov=ipyjulia_hacks
 
 after_success:
+  - .tox/py/bin/coverage combine .coverage
   - coveralls
 
 notifications:
