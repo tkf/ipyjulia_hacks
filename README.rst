@@ -29,9 +29,9 @@ Features
 * Copy-free access to Julia objects from IPython
 
 Those are build on top of the great libraries PyCall.jl_ and PyJulia_.
-(It would be great to some features to PyJulia_ at some point.  But I
-wanted to do some experiments on Python interface for handling Julia
-objects.)
+(It would be nice to merge some features to PyJulia_ at some point.
+But I wanted to do some experiments on Python interface for handling
+Julia objects.)
 
 .. _PyJulia: https://github.com/JuliaPy/pyjulia
 .. _PyCall.jl: https://github.com/JuliaPy/PyCall.jl
