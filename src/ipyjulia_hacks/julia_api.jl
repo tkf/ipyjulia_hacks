@@ -65,7 +65,7 @@ end
     dir(::T; _...) where T = fieldnames(T)
 else
     dir(m::Module; kwargs...) = names(m; all=true, kwargs...)
-    dir(m; all=true) = propertynames(m, private=!all)
+    dir(m; all=true) = propertynames(m, all)
 end
 
 struct _jlwrap_type end  # a type that would be wrapped as jlwrap by PyCall

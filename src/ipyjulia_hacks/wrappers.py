@@ -17,6 +17,8 @@ Pythonic wrapper of Julia objects.
 2
 >>> len(nt)
 2
+>>> {"a", "b"} <= set(dir(nt))
+True
 """
 
 from types import FunctionType
