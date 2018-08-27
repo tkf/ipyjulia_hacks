@@ -24,7 +24,7 @@ class JuliaAPI(object):
         self.jlwrap_type = type(get_jlwrap_prototype())
 
         # Use wrap=False when getting wrapcall to avoid infinite recursion.
-        self.wrapcall = self.eval("wrapcall", wrap=False, scope=self.api)
+        self.__wrapcall = self.eval("wrapcall", wrap=False, scope=self.api)
 
         # After this point, self.<julia_name> works:
         self.getproperty = self.getproperty_str
@@ -100,6 +100,9 @@ class JuliaAPI(object):
         if wrap in (True, None):
             return self.maybe_wrap(ans)
         return ans
+
+    def wrapcall(self, *args, **kwargs):
+        return self.maybe_wrap(self.__wrapcall(*args, **kwargs))
 
     def __getattr__(self, name):
         try:

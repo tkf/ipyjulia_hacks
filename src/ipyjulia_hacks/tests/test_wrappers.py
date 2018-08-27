@@ -1,5 +1,3 @@
-import pytest
-
 from ..wrappers import JuliaObject
 
 
@@ -93,7 +91,6 @@ def test_bitarray_rshift(julia):
 
 
 
-@pytest.mark.xfail(raises=AssertionError)
 def test_constructor(julia):
     BitArray = julia.BitArray
     ba = BitArray([1, 0, 1, 0])
