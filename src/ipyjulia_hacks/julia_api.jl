@@ -61,11 +61,11 @@ else
 end
 
 @static if VERSION < v"0.7-"
-    dir(m::Module; all=true, imported=false) = names(m, all, imported)
-    dir(::T; _...) where T = fieldnames(T)
+    dir(m::Module; all=true, imported=false) = String.(names(m, all, imported))
+    dir(::T; _...) where T = String.(fieldnames(T))
 else
-    dir(m::Module; kwargs...) = names(m; all=true, kwargs...)
-    dir(m; all=true) = propertynames(m, all)
+    dir(m::Module; kwargs...) = String.(names(m; all=true, kwargs...))
+    dir(m; all=true) = String.(propertynames(m, all))
 end
 
 struct _jlwrap_type end  # a type that would be wrapped as jlwrap by PyCall
