@@ -8,7 +8,7 @@ env:
     PYTHON=python
 
 before_install:
-  - pip install --quiet tox coveralls
+  - pip install --quiet tox
 
   # Install Julia:
   - wget -O julia.tar.gz https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-1.0.0-linux-x86_64.tar.gz
@@ -18,9 +18,6 @@ before_install:
 script:
   - export PATH="${PWD}/julia/bin:${PATH}"
   - tox -- --cov=ipyjulia_hacks
-
-after_success:
-  - coveralls
 
 notifications:
   email: false
