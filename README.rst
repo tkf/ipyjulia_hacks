@@ -2,7 +2,7 @@
  Horrible hacks for Julia-IPython integration
 ==============================================
 
-|build-status|
+|build-status| |coveralls|
 
 Screenshots
 ===========
