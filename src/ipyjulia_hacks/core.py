@@ -22,7 +22,7 @@ class APIInitializer(Singleton):
         self.api = make_api(Julia(*args, **kwargs))
 
 
-def initialized_api(*args, **kwargs):
+def initialize_api(*args, **kwargs):
     return APIInitializer.instance(*args, **kwargs).api
 
 
