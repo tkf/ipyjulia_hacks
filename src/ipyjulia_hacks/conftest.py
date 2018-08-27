@@ -1,6 +1,6 @@
 import pytest
 
-from .. import get_api
+from . import get_api
 
 
 @pytest.fixture
