@@ -7,6 +7,20 @@ Pythonic wrapper of Julia objects.
 >>> from ipyjulia_hacks import get_api
 >>> jlapi = get_api()
 
+**Mutables**:
+
+>>> spam = jlapi.eval('''eval(Module(), quote
+... mutable struct Spam
+...     egg
+... end
+... Spam(1)
+... end)''')
+>>> spam.egg
+1
+>>> spam.egg = 2
+>>> spam.egg
+2
+
 **Numbers**:
 
 >>> one = jlapi.eval("1", wrap=True)
@@ -112,7 +126,13 @@ class JuliaObject(object):
     def __getattr__(self, name):
         return self.__julia.getattr(self.__jlwrap, name)
 
-    # TODO: def __setattr__(self, name, value):
+    def __setattr__(self, name, value):
+        if name.startswith("_"):
+            super(JuliaObject, self).__setattr__(name, value)
+            return
+        symbol = self.__julia.Symbol(name)
+        self.__julia.setproperty_b(self.__jlwrap, symbol, value)
+
     # TODO: def __delattr__(self, name, value):
 
     def __dir__(self):
