@@ -4,6 +4,7 @@ module JuliaAPI
     import REPL
     import Dates
 end
+import PyCall
 using PyCall: pyjlwrap_new
 
 
@@ -22,14 +23,19 @@ function eval_str(code::AbstractString;
 end
 
 
+const NpyNumber = Union{
+    (t for t in values(PyCall.npy_typestrs) if t <: Number)...
+}
+
+
 _wrap(obj::Any) = pyjlwrap_new(obj)
 # Wrap the object if PyCall would convert it to some
 
 _wrap(obj::Union{
     Nothing,
     Integer,
-    AbstractFloat,
-    Array,
+    NpyNumber,            # to exclude ForwardDiff.Dual etc.
+    Array{<: NpyNumber},  # ditto
     AbstractString,  # should it be just String?
     Dates.AbstractTime,
 }) = obj
