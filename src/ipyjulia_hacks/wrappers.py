@@ -340,10 +340,19 @@ class JuliaObject(object):
 
     # TODO: def __index__(self)
 
-    # TODO: def __round__(self[, ndigits])
-    # TODO: def __trunc__(self)
-    # TODO: def __floor__(self)
-    # TODO: def __ceil__(self)
+    def __round__(self, ndigits=None):
+        if ndigits is None:
+            ndigits = 0
+        return self.__julia.eval("round")(self.__jlwrap, digits=ndigits)
+
+    def __trunc__(self):
+        return self.__julia.eval("trunc")(self.__jlwrap)
+
+    def __floor__(self):
+        return self.__julia.eval("floor")(self.__jlwrap)
+
+    def __ceil__(self):
+        return self.__julia.eval("ceil")(self.__jlwrap)
 
     def _repr_mimebundle_(self, include=None, exclude=None):
         mimes = include or [

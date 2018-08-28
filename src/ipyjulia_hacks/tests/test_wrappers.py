@@ -1,3 +1,5 @@
+import math
+
 from ..wrappers import JuliaObject
 
 
@@ -67,6 +69,11 @@ def test_numbers(julia):
     assert int(one) == 1
     assert float(julia.eval("1.2", wrap=True)) == 1.2
     assert complex(julia.eval("1 + 2im", wrap=True)) == 1 + 2j
+    assert round(julia.eval("1.11111111", wrap=True)) == 1
+    assert round(julia.eval("1.11111111", wrap=True), ndigits=3) == 1.111
+    assert math.trunc(julia.eval("1.9", wrap=True)) == 1
+    assert math.floor(julia.eval("1.9", wrap=True)) == 1
+    assert math.ceil(julia.eval("1.1", wrap=True)) == 2
 
 
 def test_missing(julia):
