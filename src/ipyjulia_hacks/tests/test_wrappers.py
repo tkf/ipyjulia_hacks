@@ -191,10 +191,8 @@ def test_bitarray_lshift(julia):
     x = BitArray([0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1])
     """)
     actual = x << 2
-    desired = julia.eval("x << 2")
-    assert actual == desired
-    # assert isinstance(actual, JuliaObject)
-    # assert isinstance(desired, JuliaObject)
+    desired = julia.eval("x .<< 2")
+    assert all(actual == desired)
 
 
 def test_bitarray_rshift(julia):
@@ -202,10 +200,8 @@ def test_bitarray_rshift(julia):
     x = BitArray([0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1])
     """)
     actual = x >> 2
-    desired = julia.eval("x >> 2")
-    assert actual == desired
-    # assert isinstance(actual, JuliaObject)
-    # assert isinstance(desired, JuliaObject)
+    desired = julia.eval("x .>> 2")
+    assert all(actual == desired)
 
 
 

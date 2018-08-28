@@ -103,13 +103,20 @@ import json
 unspecified = object()
 
 
-def broadcast_iop(julia, f, a, b):
-    """ Do ``a .= f.(a, b)``. """
+def broadcast(julia, fcode, *args):
+    """ Do ``($fcode).(args...)``. """
+    broadcast = julia.eval("broadcast", wrap=False)
+    f = julia.eval(fcode, wrap=False)
+    return julia.wrapcall(broadcast, f, *map(peal, args))
+
+
+def broadcast_iop(julia, fcode, a, b):
+    """ Do ``a .= ($fcode).(a, b)``. """
     broadcast_b = julia.eval("broadcast!", wrap=False)
-    op = julia.eval(f, wrap=False)
+    f = julia.eval(fcode, wrap=False)
     a = peal(a)
     b = peal(b)
-    broadcast_b(op, a, a, b)
+    broadcast_b(f, a, a, b)
 
 
 class JuliaObject(object):
@@ -164,22 +171,22 @@ class JuliaObject(object):
         return self.__julia.wrapcall(self.__jlwrap, *args, **kwargs)
 
     def __eq__(self, other):
-        return self.__julia.eval("==")(self.__jlwrap, other)
+        return broadcast(self.__julia, "==", self.__jlwrap, other)
 
     def __lt__(self, other):
-        return self.__julia.eval("<")(self.__jlwrap, other)
+        return broadcast(self.__julia, "<", self.__jlwrap, other)
 
     def __le__(self, other):
-        return self.__julia.eval("<=")(self.__jlwrap, other)
+        return broadcast(self.__julia, "<=", self.__jlwrap, other)
 
     def __ne__(self, other):
-        return self.__julia.eval("!=")(self.__jlwrap, other)
+        return broadcast(self.__julia, "!=", self.__jlwrap, other)
 
     def __gt__(self, other):
-        return self.__julia.eval(">")(self.__jlwrap, other)
+        return broadcast(self.__julia, ">", self.__jlwrap, other)
 
     def __ge__(self, other):
-        return self.__julia.eval(">=")(self.__jlwrap, other)
+        return broadcast(self.__julia, ">=", self.__jlwrap, other)
 
     # TODO: def __hash__(self):
 
@@ -220,50 +227,51 @@ class JuliaObject(object):
         return self.__julia.eval("in")(item, self.__jlwrap)
 
     def __add__(self, other):
-        return self.__julia.eval("+")(self.__jlwrap, other)
+        return broadcast(self.__julia, "+", self.__jlwrap, other)
 
     def __sub__(self, other):
-        return self.__julia.eval("-")(self.__jlwrap, other)
+        return broadcast(self.__julia, "-", self.__jlwrap, other)
 
     def __mul__(self, other):
-        return self.__julia.eval("*")(self.__jlwrap, other)
+        return broadcast(self.__julia, "*", self.__jlwrap, other)
 
     # def __matmul__(self, other):
     #     return self.__julia.eval("???")(self.__jlwrap, other)
 
     def __truediv__(self, other):
-        return self.__julia.eval("/")(self.__jlwrap, other)
+        return broadcast(self.__julia, "/", self.__jlwrap, other)
 
     def __floordiv__(self, other):
         """ Call `div` (`÷`), *not* `//`, in Julia. """
-        return self.__julia.eval("div")(self.__jlwrap, other)
+        return broadcast(self.__julia, "div", self.__jlwrap, other)
 
     def __mod__(self, other):
-        return self.__julia.eval("mod")(self.__jlwrap, other)
+        return broadcast(self.__julia, "mod", self.__jlwrap, other)
 
     def __divmod__(self, other):
-        return self.__julia.eval("divrem")(self.__jlwrap, other)
+        return broadcast(self.__julia, "divrem", self.__jlwrap, other)
 
     def __pow__(self, other, modulo=unspecified):
         if modulo is unspecified:
-            return self.__julia.eval("^")(self.__jlwrap, other)
+            return broadcast(self.__julia, "^", self.__jlwrap, other)
         else:
-            return self.__julia.eval("powermod")(self.__jlwrap, other, modulo)
+            return broadcast(self.__julia, "powermod", self.__jlwrap,
+                             other, modulo)
 
     def __lshift__(self, other):
-        return self.__julia.eval("<<")(self.__jlwrap, other)
+        return broadcast(self.__julia, "<<", self.__jlwrap, other)
 
     def __rshift__(self, other):
-        return self.__julia.eval(">>")(self.__jlwrap, other)
+        return broadcast(self.__julia, ">>", self.__jlwrap, other)
 
     def __and__(self, other):
-        return self.__julia.eval("&")(self.__jlwrap, other)
+        return broadcast(self.__julia, "&", self.__jlwrap, other)
 
     def __xor__(self, other):
-        return self.__julia.eval("xor")(self.__jlwrap, other)
+        return broadcast(self.__julia, "xor", self.__jlwrap, other)
 
     def __or__(self, other):
-        return self.__julia.eval("|")(self.__jlwrap, other)
+        return broadcast(self.__julia, "|", self.__jlwrap, other)
 
     def __radd__(self, other):
         return self.__julia.eval("+")(other, self.__jlwrap)
