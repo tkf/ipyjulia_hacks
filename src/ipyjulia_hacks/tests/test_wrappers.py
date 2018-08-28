@@ -44,6 +44,21 @@ def test_array_contains(julia):
     assert 1 in a
 
 
+def test_numbers(julia):
+    one = julia.eval("1", wrap=True)
+    two = julia.eval("2", wrap=True)
+    six = julia.eval("6", wrap=True)
+    five = julia.eval("5", wrap=True)
+    assert 2 + 1 == two + 1 == 2 + one == two + one
+    assert 2 - 1 == two - 1 == 2 - one == two - one
+    assert 2 * 1 == two * 1 == 2 * one == two * one
+    assert 2 / 1 == two / 1 == 2 / one == two / one
+    assert 2 ** 2 == two ** 2 == 2 ** two == two ** two
+    assert 1 << 1 == one << 1 == 1 << one == one << one
+    assert 1 >> 1 == one >> 1 == 1 >> one == one >> one
+    assert pow(2, 6, 5) == pow(two, six, five)
+
+
 def test_missing(julia):
     missing = julia.missing
 
