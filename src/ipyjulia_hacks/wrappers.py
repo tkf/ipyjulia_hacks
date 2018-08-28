@@ -42,6 +42,19 @@ Pythonic wrapper of Julia objects.
 >>> list(reversed(arr))
 [3, 2, 1]
 
+**Linear algebra**:
+
+>>> jlapi.eval("import LinearAlgebra")
+>>> I = jlapi.eval("LinearAlgebra.I")
+>>> M = jlapi.eval("reshape(1:6, 2, 3)")
+>>> Y = M @ I
+>>> Y
+array([[1, 3, 5],
+       [2, 4, 6]], dtype=int64)
+>>> import numpy
+>>> M @ numpy.ones(3)
+array([ 9., 12.])
+
 **Named tuple**:
 
 >>> nt = jlapi.eval("(a = 1, b = 2)")
@@ -235,8 +248,8 @@ class JuliaObject(object):
     def __mul__(self, other):
         return broadcast(self.__julia, "*", self.__jlwrap, other)
 
-    # def __matmul__(self, other):
-    #     return self.__julia.eval("???")(self.__jlwrap, other)
+    def __matmul__(self, other):
+        return self.__julia.eval("*")(self.__jlwrap, other)
 
     def __truediv__(self, other):
         return broadcast(self.__julia, "/", self.__jlwrap, other)
@@ -282,8 +295,8 @@ class JuliaObject(object):
     def __rmul__(self, other):
         return self.__julia.eval("*")(other, self.__jlwrap)
 
-    # def __rmatmul__(self, other):
-    #     return self.__julia.eval("???")(other, self.__jlwrap)
+    def __rmatmul__(self, other):
+        return self.__julia.eval("*")(other, self.__jlwrap)
 
     def __rtruediv__(self, other):
         return self.__julia.eval("/")(other, self.__jlwrap)
@@ -327,9 +340,9 @@ class JuliaObject(object):
         broadcast_iop(self.__julia, "*", self, other)
         return self
 
-    # def __imatmul__(self, other):
-    #     broadcast_iop(self.__julia, "???", self, other)
-    #     return self
+    def __imatmul__(self, other):
+        self.__julia.rmul_b(self.__jlwrap, other)
+        return self
 
     def __itruediv__(self, other):
         broadcast_iop(self.__julia, "/", self, other)
