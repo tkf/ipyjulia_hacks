@@ -61,6 +61,12 @@ def test_numbers(julia):
     assert +1 == +one
     assert abs(-1) == abs(julia.eval("-1", wrap=True))
     assert ~2 == ~two
+    assert isinstance(one.__int__(), int)
+    assert isinstance(one.__float__(), float)
+    assert isinstance(one.__complex__(), complex)
+    assert int(one) == 1
+    assert float(julia.eval("1.2", wrap=True)) == 1.2
+    assert complex(julia.eval("1 + 2im", wrap=True)) == 1 + 2j
 
 
 def test_missing(julia):

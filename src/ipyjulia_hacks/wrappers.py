@@ -324,9 +324,19 @@ class JuliaObject(object):
     def __invert__(self):
         return self.__julia.eval("~")(self.__jlwrap)
 
-    # TODO: def __complex__(self)
-    # TODO: def __int__(self)
-    # TODO: def __float__(self)
+    def __complex__(self):
+        jlcomplex = self.__julia.eval("ComplexF64", wrap=False)
+        return complex(peal(jlcomplex(self.__jlwrap)))
+
+    def __int__(self):
+        jlint = self.__julia.eval("Int128", wrap=False)
+        return int(peal(jlint(self.__jlwrap)))
+
+    def __float__(self):
+        jlfloat = self.__julia.eval("Float64", wrap=False)
+        return float(peal(jlfloat(self.__jlwrap)))
+
+    # TODO: Use BigFloat/BigInt if mpmath is installed.
 
     # TODO: def __index__(self)
 
