@@ -103,12 +103,17 @@ class JuliaObject(object):
         return "<{} {}>".format(self.__class__.__name__,
                                 self.__julia.repr(self.__jlwrap))
 
+    # TODO: def __bytes__(self):
+
     @property
     def __doc__(self):
         return self.__jlwrap.__doc__
 
     def __getattr__(self, name):
         return self.__julia.getattr(self.__jlwrap, name)
+
+    # TODO: def __setattr__(self, name, value):
+    # TODO: def __delattr__(self, name, value):
 
     def __dir__(self):
         return self.__julia.py_names(self.__jlwrap)
@@ -118,6 +123,15 @@ class JuliaObject(object):
 
     def __eq__(self, other):
         return self.__julia.eval("==")(self.__jlwrap, other)
+
+    # TODO: def __lt__(self, other):
+    # TODO: def __le__(self, other):
+    # TODO: def __ne__(self, other):
+    # TODO: def __gt__(self, other):
+    # TODO: def __ge__(self, other):
+
+    # TODO: def __hash__(self):
+    # TODO: def __bool__(self):
 
     def __len__(self):
         return self.__julia.length(self.__jlwrap)
@@ -145,6 +159,8 @@ class JuliaObject(object):
                 return
             yield pair[1]
             pair = iterate(self.__jlwrap, pair[2])
+
+    # TODO: def __reversed__(self):
 
     def __contains__(self, item):
         return self.__julia.eval("in")(item, self.__jlwrap)
@@ -194,6 +210,49 @@ class JuliaObject(object):
 
     def __or__(self, other):
         return self.__julia.eval("|")(self.__jlwrap, other)
+
+    # TODO: def __radd__(self, other)
+    # TODO: def __rsub__(self, other)
+    # TODO: def __rmul__(self, other)
+    # TODO: def __rmatmul__(self, other)
+    # TODO: def __rtruediv__(self, other)
+    # TODO: def __rfloordiv__(self, other)
+    # TODO: def __rmod__(self, other)
+    # TODO: def __rdivmod__(self, other)
+    # TODO: def __rpow__(self, other)
+    # TODO: def __rlshift__(self, other)
+    # TODO: def __rrshift__(self, other)
+    # TODO: def __rand__(self, other)
+    # TODO: def __rxor__(self, other)
+    # TODO: def __ror__(self, other)
+    # TODO: def __iadd__(self, other)
+    # TODO: def __isub__(self, other)
+    # TODO: def __imul__(self, other)
+    # TODO: def __imatmul__(self, other)
+    # TODO: def __itruediv__(self, other)
+    # TODO: def __ifloordiv__(self, other)
+    # TODO: def __imod__(self, other)
+    # TODO: def __ipow__(self, other[, modulo])
+    # TODO: def __ilshift__(self, other)
+    # TODO: def __irshift__(self, other)
+    # TODO: def __iand__(self, other)
+    # TODO: def __ixor__(self, other)
+    # TODO: def __ior__(self, other)
+    # TODO: def __neg__(self)
+    # TODO: def __pos__(self)
+    # TODO: def __abs__(self)
+    # TODO: def __invert__(self)
+
+    # TODO: def __complex__(self)
+    # TODO: def __int__(self)
+    # TODO: def __float__(self)
+
+    # TODO: def __index__(self)
+
+    # TODO: def __round__(self[, ndigits])
+    # TODO: def __trunc__(self)
+    # TODO: def __floor__(self)
+    # TODO: def __ceil__(self)
 
     def _repr_mimebundle_(self, include=None, exclude=None):
         mimes = include or [
