@@ -142,6 +142,13 @@ class JuliaAPI(object):
         except Exception:
             raise AttributeError(name)
 
+    def import_(self, module):
+        return self.eval("""eval(Module(), quote
+        import {module}
+        {module}
+        end)
+        """.format(module=module))
+
 
 def banner(julia, **kwargs):
     banner = julia.eval("""
