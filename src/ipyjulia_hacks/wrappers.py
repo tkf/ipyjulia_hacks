@@ -40,6 +40,32 @@ True
 1
 >>> dct
 <JuliaObject Dict("a"=>1)>
+
+**Three-valued logic**:
+
+>>> true = jlapi.eval("true", wrap=True)
+>>> false = jlapi.eval("false", wrap=True)
+>>> missing = jlapi.eval("missing")
+>>> true
+<JuliaObject true>
+>>> false
+<JuliaObject false>
+>>> true & missing
+<JuliaObject missing>
+>>> false & missing
+False
+>>> true | missing
+True
+>>> false | missing
+<JuliaObject missing>
+>>> true ^ false
+True
+>>> true ^ true
+False
+>>> true ^ missing
+<JuliaObject missing>
+>>> false ^ false
+False
 """
 
 from types import FunctionType
