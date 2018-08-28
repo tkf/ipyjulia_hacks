@@ -36,6 +36,12 @@ Pythonic wrapper of Julia objects.
 >>> assert one <= 1
 >>> assert one
 
+**Arrays**:
+
+>>> arr = jlapi.eval("[1, 2, 3]", wrap=True)
+>>> list(reversed(arr))
+[3, 2, 1]
+
 **Named tuple**:
 
 >>> nt = jlapi.eval("(a = 1, b = 2)")
@@ -198,7 +204,8 @@ class JuliaObject(object):
             yield pair[1]
             pair = iterate(self.__jlwrap, pair[2])
 
-    # TODO: def __reversed__(self):
+    def __reversed__(self):
+        return self.__julia.eval("reverse")(self.__jlwrap)
 
     def __contains__(self, item):
         return self.__julia.eval("in")(item, self.__jlwrap)
