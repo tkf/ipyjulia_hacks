@@ -62,6 +62,42 @@ def test_missing(julia):
     assert isa_missing(missing ** 1)
 
 
+def test_three_valued_logic_left(julia):
+    true = julia.eval("true", wrap=True)
+    false = julia.eval("false", wrap=True)
+    missing = julia.eval("missing")
+
+    def isa_missing(x):
+        return julia.eval("===")(x, missing)
+
+    assert isa_missing(true & missing)
+    assert not false & missing
+    assert true | missing
+    assert isa_missing(false | missing)
+    assert true ^ False
+    assert not true ^ True
+    assert isa_missing(true ^ missing)
+    assert not false ^ False
+
+
+def test_three_valued_logic_right(julia):
+    true = julia.eval("true", wrap=True)
+    false = julia.eval("false", wrap=True)
+    missing = julia.eval("missing")
+
+    def isa_missing(x):
+        return julia.eval("===")(x, missing)
+
+    assert isa_missing(True & missing)
+    assert not False & missing
+    assert True | missing
+    assert isa_missing(False | missing)
+    assert True ^ false
+    assert not True ^ true
+    assert isa_missing(True ^ missing)
+    assert not False ^ false
+
+
 def test_string_mul(julia):
     a = julia.eval('"a"', wrap=True)
     b = julia.eval('"b"', wrap=True)

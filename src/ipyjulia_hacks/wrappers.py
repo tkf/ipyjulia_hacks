@@ -256,20 +256,48 @@ class JuliaObject(object):
     def __or__(self, other):
         return self.__julia.eval("|")(self.__jlwrap, other)
 
-    # TODO: def __radd__(self, other)
-    # TODO: def __rsub__(self, other)
-    # TODO: def __rmul__(self, other)
-    # TODO: def __rmatmul__(self, other)
-    # TODO: def __rtruediv__(self, other)
-    # TODO: def __rfloordiv__(self, other)
-    # TODO: def __rmod__(self, other)
-    # TODO: def __rdivmod__(self, other)
-    # TODO: def __rpow__(self, other)
-    # TODO: def __rlshift__(self, other)
-    # TODO: def __rrshift__(self, other)
-    # TODO: def __rand__(self, other)
-    # TODO: def __rxor__(self, other)
-    # TODO: def __ror__(self, other)
+    def __radd__(self, other):
+        return self.__julia.eval("+")(other, self.__jlwrap)
+
+    def __rsub__(self, other):
+        return self.__julia.eval("-")(other, self.__jlwrap)
+
+    def __rmul__(self, other):
+        return self.__julia.eval("*")(other, self.__jlwrap)
+
+    # def __rmatmul__(self, other):
+    #     return self.__julia.eval("???")(other, self.__jlwrap)
+
+    def __rtruediv__(self, other):
+        return self.__julia.eval("/")(other, self.__jlwrap)
+
+    def __rfloordiv__(self, other):
+        return self.__julia.eval("div")(other, self.__jlwrap)
+
+    def __rmod__(self, other):
+        return self.__julia.eval("mod")(other, self.__jlwrap)
+
+    def __rdivmod__(self, other):
+        return self.__julia.eval("divrem")(other, self.__jlwrap)
+
+    def __rpow__(self, other):
+        return self.__julia.eval("^")(other, self.__jlwrap)
+
+    def __rlshift__(self, other):
+        return self.__julia.eval("<<")(other, self.__jlwrap)
+
+    def __rrshift__(self, other):
+        return self.__julia.eval(">>")(other, self.__jlwrap)
+
+    def __rand__(self, other):
+        return self.__julia.eval("&")(other, self.__jlwrap)
+
+    def __rxor__(self, other):
+        return self.__julia.eval("xor")(other, self.__jlwrap)
+
+    def __ror__(self, other):
+        return self.__julia.eval("|")(other, self.__jlwrap)
+
     # TODO: def __iadd__(self, other)
     # TODO: def __isub__(self, other)
     # TODO: def __imul__(self, other)
