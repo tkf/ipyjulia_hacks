@@ -5,7 +5,7 @@ module JuliaAPI
     import Dates
 end
 import PyCall
-using PyCall: pyjlwrap_new
+using PyCall: PyObject, pyjlwrap_new
 
 
 function eval_str(code::AbstractString;
@@ -52,6 +52,17 @@ _wrap(obj::Union{
 Wrap what `f(args...; kwargs...)` returns.
 """
 wrapcall(f::Base.Callable, args...; kwargs...) = _wrap(f(args...; kwargs...))
+
+
+struct WrappingCallback
+    o::PyObject
+    force::Bool
+end
+
+function (f::WrappingCallback)(args...; kwargs...)
+    wrap = f.force ? pyjlwrap_new : _wrap
+    return f.o(wrap.(args)...; (k => wrap(v) for (k, v) in kwargs)...)
+end
 
 
 set_var(name::String, value) = set_var(Symbol(name), value)

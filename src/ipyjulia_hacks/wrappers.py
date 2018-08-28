@@ -471,7 +471,12 @@ class JuliaObject(object):
 
 
 def peal(obj):
-    return obj._JuliaObject__jlwrap if isinstance(obj, JuliaObject) else obj
+    if isinstance(obj, JuliaObject):
+        return obj._JuliaObject__jlwrap
+    elif isinstance(obj, JuliaCallback):
+        return peal(obj.wrap())
+    else:
+        return obj
 
 
 def autopeal(fun):
@@ -495,3 +500,26 @@ for name, fun in vars(JuliaObject).items():
         continue
     # TODO: skip single-argument (i.e., `self`-only) methods (optimization)
     setattr(JuliaObject, name, autopeal(fun))
+
+
+class JuliaCallback(object):
+
+    def __init__(self, function):
+        self.function = function
+
+    def __call__(self, *args, **kwargs):
+        return self.function(*args, **kwargs)
+
+    def wrap(self, force=True):
+        from . import get_api
+        julia = get_api()
+
+        def function(*args, **kwargs):
+            wargs = [julia.maybe_wrap(a) for a in args]
+            wkwargs = {k: julia.maybe_wrap(v) for (k, v) in kwargs.items()}
+            return peal(self.function(*wargs, **wkwargs))
+
+        return julia.WrappingCallback(function, force)
+
+
+jlfunction = JuliaCallback
