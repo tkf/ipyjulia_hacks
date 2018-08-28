@@ -57,6 +57,10 @@ def test_numbers(julia):
     assert 1 << 1 == one << 1 == 1 << one == one << one
     assert 1 >> 1 == one >> 1 == 1 >> one == one >> one
     assert pow(2, 6, 5) == pow(two, six, five)
+    assert -1 == -one
+    assert +1 == +one
+    assert abs(-1) == abs(julia.eval("-1", wrap=True))
+    assert ~2 == ~two
 
 
 def test_missing(julia):

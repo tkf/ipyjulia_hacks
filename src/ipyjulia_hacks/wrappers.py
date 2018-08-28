@@ -311,10 +311,18 @@ class JuliaObject(object):
     # TODO: def __iand__(self, other)
     # TODO: def __ixor__(self, other)
     # TODO: def __ior__(self, other)
-    # TODO: def __neg__(self)
-    # TODO: def __pos__(self)
-    # TODO: def __abs__(self)
-    # TODO: def __invert__(self)
+
+    def __neg__(self):
+        return self.__julia.eval("-")(self.__jlwrap)
+
+    def __pos__(self):
+        return self.__julia.eval("+")(self.__jlwrap)
+
+    def __abs__(self):
+        return self.__julia.eval("abs")(self.__jlwrap)
+
+    def __invert__(self):
+        return self.__julia.eval("~")(self.__jlwrap)
 
     # TODO: def __complex__(self)
     # TODO: def __int__(self)
