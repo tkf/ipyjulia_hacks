@@ -28,6 +28,13 @@ Pythonic wrapper of Julia objects.
 <JuliaObject 1>
 >>> one // 2  # translated to ``1 ÷ 2``, *not* ``1 // 2``
 0
+>>> assert one == 1
+>>> assert one != 0
+>>> assert one > 0
+>>> assert one >= 1
+>>> assert one < 2
+>>> assert one <= 1
+>>> assert one
 
 **Named tuple**:
 
@@ -144,14 +151,25 @@ class JuliaObject(object):
     def __eq__(self, other):
         return self.__julia.eval("==")(self.__jlwrap, other)
 
-    # TODO: def __lt__(self, other):
-    # TODO: def __le__(self, other):
-    # TODO: def __ne__(self, other):
-    # TODO: def __gt__(self, other):
-    # TODO: def __ge__(self, other):
+    def __lt__(self, other):
+        return self.__julia.eval("<")(self.__jlwrap, other)
+
+    def __le__(self, other):
+        return self.__julia.eval("<=")(self.__jlwrap, other)
+
+    def __ne__(self, other):
+        return self.__julia.eval("!=")(self.__jlwrap, other)
+
+    def __gt__(self, other):
+        return self.__julia.eval(">")(self.__jlwrap, other)
+
+    def __ge__(self, other):
+        return self.__julia.eval(">=")(self.__jlwrap, other)
 
     # TODO: def __hash__(self):
-    # TODO: def __bool__(self):
+
+    def __bool__(self):
+        return self.__julia.eval("Bool")(self.__jlwrap)
 
     def __len__(self):
         return self.__julia.length(self.__jlwrap)
