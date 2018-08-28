@@ -27,7 +27,8 @@ _wrap(obj::Any) = pyjlwrap_new(obj)
 
 _wrap(obj::Union{
     Nothing,
-    Number,
+    Integer,
+    AbstractFloat,
     Array,
     AbstractString,  # should it be just String?
     Dates.AbstractTime,

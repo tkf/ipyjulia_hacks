@@ -7,6 +7,14 @@ Pythonic wrapper of Julia objects.
 >>> from ipyjulia_hacks import get_api
 >>> jlapi = get_api()
 
+**Numbers**:
+
+>>> one = jlapi.eval("1", wrap=True)
+>>> one
+<JuliaObject 1>
+>>> one // 2
+<JuliaObject 1//2>
+
 **Named tuple**:
 
 >>> nt = jlapi.eval("(a = 1, b = 2)")
@@ -131,6 +139,7 @@ class JuliaObject(object):
         return self.__julia.eval("/")(self.__jlwrap, other)
 
     def __floordiv__(self, other):
+        """ Call `//`, *not*  `div` (`÷`), in Julia. """
         return self.__julia.eval("//")(self.__jlwrap, other)
 
     def __mod__(self, other):
