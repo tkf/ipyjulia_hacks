@@ -103,6 +103,15 @@ import json
 unspecified = object()
 
 
+def broadcast_iop(julia, f, a, b):
+    """ Do ``a .= f.(a, b)``. """
+    broadcast_b = julia.eval("broadcast!", wrap=False)
+    op = julia.eval(f, wrap=False)
+    a = peal(a)
+    b = peal(b)
+    broadcast_b(op, a, a, b)
+
+
 class JuliaObject(object):
     """
     Python interface for Julia object.
@@ -298,19 +307,60 @@ class JuliaObject(object):
     def __ror__(self, other):
         return self.__julia.eval("|")(other, self.__jlwrap)
 
-    # TODO: def __iadd__(self, other)
-    # TODO: def __isub__(self, other)
-    # TODO: def __imul__(self, other)
-    # TODO: def __imatmul__(self, other)
-    # TODO: def __itruediv__(self, other)
-    # TODO: def __ifloordiv__(self, other)
-    # TODO: def __imod__(self, other)
-    # TODO: def __ipow__(self, other[, modulo])
-    # TODO: def __ilshift__(self, other)
-    # TODO: def __irshift__(self, other)
-    # TODO: def __iand__(self, other)
-    # TODO: def __ixor__(self, other)
-    # TODO: def __ior__(self, other)
+    def __iadd__(self, other):
+        broadcast_iop(self.__julia, "+", self, other)
+        return self
+
+    def __isub__(self, other):
+        broadcast_iop(self.__julia, "-", self, other)
+        return self
+
+    def __imul__(self, other):
+        broadcast_iop(self.__julia, "*", self, other)
+        return self
+
+    # def __imatmul__(self, other):
+    #     broadcast_iop(self.__julia, "???", self, other)
+    #     return self
+
+    def __itruediv__(self, other):
+        broadcast_iop(self.__julia, "/", self, other)
+        return self
+
+    def __ifloordiv__(self, other):
+        broadcast_iop(self.__julia, "div", self, other)
+        return self
+
+    def __imod__(self, other):
+        broadcast_iop(self.__julia, "mod", self, other)
+        return self
+
+    def __ipow__(self, other, modulo=unspecified):
+        if modulo is unspecified:
+            broadcast_iop(self.__julia, "^", self, other)
+        else:
+            broadcast_iop(self.__julia, "powermod", self, other, modulo)
+        return self
+
+    def __ilshift__(self, other):
+        broadcast_iop(self.__julia, "<<", self, other)
+        return self
+
+    def __irshift__(self, other):
+        broadcast_iop(self.__julia, ">>", self, other)
+        return self
+
+    def __iand__(self, other):
+        broadcast_iop(self.__julia, "&", self, other)
+        return self
+
+    def __ixor__(self, other):
+        broadcast_iop(self.__julia, "xor", self, other)
+        return self
+
+    def __ior__(self, other):
+        broadcast_iop(self.__julia, "|", self, other)
+        return self
 
     def __neg__(self):
         return self.__julia.eval("-")(self.__jlwrap)

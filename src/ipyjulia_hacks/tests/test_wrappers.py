@@ -76,6 +76,56 @@ def test_numbers(julia):
     assert math.ceil(julia.eval("1.1", wrap=True)) == 2
 
 
+def test_arrays_inplace_binary_ops(julia):
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs += 1
+    assert all(x == 2 for x in xs)
+
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs -= 1
+    assert all(x == 0 for x in xs)
+
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs *= 2
+    assert all(x == 2 for x in xs)
+
+    xs = julia.eval("[2, 2, 2]", wrap=True)
+    xs /= 2
+    assert all(x == 1 for x in xs)
+
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs //= 2
+    assert all(x == 0 for x in xs)
+
+    xs = julia.eval("[2, 2, 2]", wrap=True)
+    xs %= 2
+    assert all(x == 0 for x in xs)
+
+    xs = julia.eval("[2, 2, 2]", wrap=True)
+    xs **= 2
+    assert all(x == 4 for x in xs)
+
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs <<= 1
+    assert all(x == 2 for x in xs)
+
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs >>= 1
+    assert all(x == 0 for x in xs)
+
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs &= 0
+    assert all(x == 0 for x in xs)
+
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs ^= 0
+    assert all(x == 1 for x in xs)
+
+    xs = julia.eval("[1, 1, 1]", wrap=True)
+    xs |= 0
+    assert all(x == 1 for x in xs)
+
+
 def test_missing(julia):
     missing = julia.missing
 
