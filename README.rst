@@ -2,7 +2,7 @@
  Horrible hacks for Julia-IPython integration
 ==============================================
 
-|build-status| |coveralls|
+|readthedocs| |build-status| |coveralls|
 
 Screenshots
 ===========
@@ -62,3 +62,7 @@ Pretty much everything has to be installed from development version::
    image:: https://coveralls.io/repos/github/tkf/ipyjulia_hacks/badge.svg?branch=master
    :target: https://coveralls.io/github/tkf/ipyjulia_hacks?branch=master
    :alt: Test Coverage
+
+.. |readthedocs| image:: https://readthedocs.org/projects/ipyjulia-hacks/badge/?version=latest
+   :target: https://ipyjulia-hacks.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
