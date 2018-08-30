@@ -21,6 +21,7 @@ before_install:
 script:
   - export PATH="${PWD}/julia/bin:${PATH}"
   - tox -- --cov=ipyjulia_hacks
+  - tox -e doc -- -W
 
 after_success:
   - .tox/py/bin/coverage combine .coverage
