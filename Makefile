@@ -30,7 +30,7 @@ clean-pycache:
 
 ## Documentation
 doc: inject-readme
-	tox -e doc
+	tox -e doc -- -W
 
 update-init: inject-readme
 	git commit --message "Update src/$(PROJECT)/__init__.py" \
