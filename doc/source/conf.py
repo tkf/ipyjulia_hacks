@@ -69,6 +69,10 @@ language = 'en'
 # This pattern also affects html_static_path and html_extra_path .
 exclude_patterns = []
 
+# The reST default role (used for this markup: `text`) to use for all
+# documents.
+default_role = 'py:obj'
+
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
