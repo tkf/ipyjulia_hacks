@@ -80,6 +80,8 @@ True
 1
 >>> dct
 <JuliaObject Dict("a"=>1)>
+>>> dct == {"a": 1}
+True
 
 **Three-valued logic**:
 
@@ -184,22 +186,22 @@ class JuliaObject(object):
         return self.__julia.wrapcall(self.__jlwrap, *args, **kwargs)
 
     def __eq__(self, other):
-        return broadcast(self.__julia, "==", self.__jlwrap, other)
+        return self.__julia.pybroadcast("==", self.__jlwrap, other)
 
     def __lt__(self, other):
-        return broadcast(self.__julia, "<", self.__jlwrap, other)
+        return self.__julia.pybroadcast("<", self.__jlwrap, other)
 
     def __le__(self, other):
-        return broadcast(self.__julia, "<=", self.__jlwrap, other)
+        return self.__julia.pybroadcast("<=", self.__jlwrap, other)
 
     def __ne__(self, other):
-        return broadcast(self.__julia, "!=", self.__jlwrap, other)
+        return self.__julia.pybroadcast("!=", self.__jlwrap, other)
 
     def __gt__(self, other):
-        return broadcast(self.__julia, ">", self.__jlwrap, other)
+        return self.__julia.pybroadcast(">", self.__jlwrap, other)
 
     def __ge__(self, other):
-        return broadcast(self.__julia, ">=", self.__jlwrap, other)
+        return self.__julia.pybroadcast(">=", self.__jlwrap, other)
 
     # TODO: def __hash__(self):
 
