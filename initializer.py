@@ -31,14 +31,14 @@ class APIInitializer(Singleton):
         self.api = make_api(Julia(*args, **kwargs))
 
 
-def initialize_api(*args, **kwargs):
+def get_api(*args, **kwargs):
     """
     Initialize `.JuliaAPI`.
 
     Positional and keyword arguments are passed directly to `julia.Julia`
 
-    >>> from ipyjulia_hacks import initialize_api
-    >>> initialize_api(jl_runtime_path="PATH/TO/CUSTOM/JULIA") # doctest: +SKIP
+    >>> from ipyjulia_hacks import get_api
+    >>> get_api(jl_runtime_path="PATH/TO/CUSTOM/JULIA") # doctest: +SKIP
     <JuliaAPI ...>
     """
     return APIInitializer.instance(*args, **kwargs).api
@@ -64,16 +64,16 @@ def get_cached_api():
 class JuliaMainInitializer(Singleton):
 
     def __init__(self, *args, **kwargs):
-        self.Main = JuliaMain(initialize_api(*args, **kwargs))
+        self.Main = JuliaMain(get_api(*args, **kwargs))
 
 
-def initialize_main(*args, **kwargs):
+def get_main(*args, **kwargs):
     return JuliaMainInitializer.instance(*args, **kwargs).Main
 
 
 def get_cached_main():
     if get_cached_api() is not None:
-        return initialize_main()
+        return get_main()
 
 
 def revise():
