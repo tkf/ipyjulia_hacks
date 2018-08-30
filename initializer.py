@@ -44,15 +44,15 @@ def initialize_api(*args, **kwargs):
     return APIInitializer.instance(*args, **kwargs).api
 
 
-def get_api():
+def get_cached_api():
     """
     Get pre-initialized `.JuliaAPI` instance or `None` if not ready.
 
     .. (this is for checking availability in doctest)
        >>> _ = getfixture("julia")
 
-    >>> from ipyjulia_hacks import get_api
-    >>> jlapi = get_api()
+    >>> from ipyjulia_hacks import get_cached_api
+    >>> jlapi = get_cached_api()
     >>> jlapi.eval("1 + 1")
     2
     """
@@ -71,8 +71,8 @@ def initialize_main(*args, **kwargs):
     return JuliaMainInitializer.instance(*args, **kwargs).Main
 
 
-def get_main():
-    if get_api() is not None:
+def get_cached_main():
+    if get_cached_api() is not None:
         return initialize_main()
 
 

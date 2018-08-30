@@ -1,12 +1,12 @@
 import pytest
 
-from . import get_api
+from . import get_cached_api
 
 
 @pytest.fixture
 def julia():
     """ pytest fixture for providing a `JuliaAPI` instance. """
-    julia = get_api()
+    julia = get_cached_api()
     if julia is None:
         pytest.skip("JuliaAPI is not initialized.")
     return julia
