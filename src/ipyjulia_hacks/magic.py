@@ -1,8 +1,7 @@
 from IPython.core.magic import Magics
 from julia import magic
 
-from .core import initialize_api
-from .julia_api import banner
+from .core import initialize_api, banner
 
 
 class JuliaMagicsEnhanced(magic.JuliaMagics):

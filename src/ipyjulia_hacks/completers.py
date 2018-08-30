@@ -4,7 +4,7 @@ import re
 from IPython.core.completer import Completion, IPCompleter
 from cached_property import cached_property
 
-from .utils import Singleton
+from .core.utils import Singleton
 
 
 class JuliaCompleter(Singleton):

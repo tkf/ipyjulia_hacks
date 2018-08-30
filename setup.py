@@ -5,7 +5,7 @@ setup(
     version="0.0.0",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    package_data={"ipyjulia_hacks": ["*.jl"]},
+    package_data={"ipyjulia_hacks": ["**/*.jl"]},
     author="Takafumi Arakaki",
     author_email="aka.tkf@gmail.com",
     # url="https://github.com/tkf/ipyjulia_hacks",
