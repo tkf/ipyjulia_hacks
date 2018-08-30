@@ -4,31 +4,28 @@ from .utils import Singleton, reloadall
 from .julia_api import JuliaAPI, JuliaMain
 
 
-def make_api(julia):
-    """
-    Initialize `.JuliaAPI` using PyJulia.
-
-    Parameters
-    ----------
-    julia : julia.Julia
-        PyJulia's julia interface.
-    """
-    julia_api_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  "julia_api.jl")
-    api, eval_str = julia.eval("""
-    path -> let m = Module()
-        Base.include(m, path)
-        (m.JuliaAPI, m.JuliaAPI.eval_str)
-    end
-    """)(julia_api_path)
-    return JuliaAPI(eval_str, api)
-
-
 class APIInitializer(Singleton):
 
     def __init__(self, *args, **kwargs):
+        self.api = JuliaAPI(*args, **kwargs)
+
+    @classmethod
+    def with_pyjulia(cls, *args, **kwargs):
+        """
+        Initialize `.JuliaAPI` using PyJulia.
+        """
         from julia.core import Julia
-        self.api = make_api(Julia(*args, **kwargs))
+        julia = Julia(*args, **kwargs)
+
+        julia_api_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "julia_api.jl")
+        api, eval_str = julia.eval("""
+        path -> let m = Module()
+            Base.include(m, path)
+            (m.JuliaAPI, m.JuliaAPI.eval_str)
+        end
+        """)(julia_api_path)
+        return cls.instance(eval_str, api)
 
 
 def get_api(*args, **kwargs):
@@ -41,7 +38,7 @@ def get_api(*args, **kwargs):
     >>> get_api(jl_runtime_path="PATH/TO/CUSTOM/JULIA") # doctest: +SKIP
     <JuliaAPI ...>
     """
-    return APIInitializer.instance(*args, **kwargs).api
+    return APIInitializer.with_pyjulia(*args, **kwargs).api
 
 
 def get_cached_api():
