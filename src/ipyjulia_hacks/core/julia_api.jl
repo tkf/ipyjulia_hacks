@@ -90,6 +90,12 @@ struct _jlwrap_type end  # a type that would be wrapped as jlwrap by PyCall
 
 get_jlwrap_prototype() = _jlwrap_type()
 
+pybroadcast(op::String, args...) =
+    _pybroadcast(eval(Meta.parse(strip(op))), args...)
+pybroadcast(op, args...) = _pybroadcast(op, args...)
+_pybroadcast(op, args::AbstractArray...) = op.(args...)
+_pybroadcast(op, args...) = op(args...)
+
 struct PySlice
     start
     stop
