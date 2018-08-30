@@ -8,8 +8,7 @@
 API
 ===
 
-.. automodule:: ipyjulia_hacks.wrappers
-.. automodule:: ipyjulia_hacks.julia_api
+.. automodule:: ipyjulia_hacks.core.wrappers
 .. autofunction:: ipyjulia_hacks.initialize_api
 .. autofunction:: ipyjulia_hacks.get_api
 .. autoclass:: ipyjulia_hacks.core.JuliaAPI
