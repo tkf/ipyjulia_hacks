@@ -1,7 +1,7 @@
 import os
 
 from .utils import Singleton, reloadall
-from .julia_api import JuliaAPI
+from .julia_api import JuliaAPI, JuliaMain
 
 
 def make_api(julia):
@@ -44,7 +44,7 @@ def initialize_api(*args, **kwargs):
     return APIInitializer.instance(*args, **kwargs).api
 
 
-def get_api(default=None):
+def get_api():
     """
     Get pre-initialized `.JuliaAPI` instance or `None` if not ready.
 
@@ -56,9 +56,24 @@ def get_api(default=None):
     >>> jlapi.eval("1 + 1")
     2
     """
-    initializer = APIInitializer.initialized(default=default)
+    initializer = APIInitializer.initialized()
     if initializer is not None:
         return initializer.api
+
+
+class JuliaMainInitializer(Singleton):
+
+    def __init__(self, *args, **kwargs):
+        self.Main = JuliaMain(initialize_api(*args, **kwargs))
+
+
+def initialize_main(*args, **kwargs):
+    return JuliaMainInitializer.instance(*args, **kwargs).Main
+
+
+def get_main():
+    if get_api() is not None:
+        return initialize_main()
 
 
 def revise():

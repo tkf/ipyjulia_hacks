@@ -144,6 +144,48 @@ class JuliaAPI(object):
         except Exception:
             raise AttributeError(name)
 
+
+class JuliaMain(object):
+
+    """
+    An interface to Julia's `Main` namespace.
+    """
+
+    def __init__(self, julia):
+        self.__julia = julia
+
+    eval = property(lambda self: self.__julia.eval)
+
+    def __setattr__(self, name, value):
+        if name.startswith('_'):
+            object.__setattr__(self, name, value)
+            # super().__setattr__(name, value)
+        else:
+            self.__julia.set_var(name, value)
+
+    def __getattr__(self, name):
+        if name.startswith('_'):
+            return object.__getattr__(self, name)
+            # return super().__getattr__(name)
+        else:
+            Main = self.__julia.eval('Main')
+            return self.__julia.getattr(Main, name)
+
+    @property
+    def __all__(self):
+        Main = self.__julia.eval("Main")
+        return list(self.__julia.py_names(Main))
+
+    def __dir__(self):
+        if sys.version_info.major == 2:
+            names = set()
+        else:
+            names = set(super().__dir__())
+        names.update(self.__all__)
+        return list(names)
+    # Override __dir__ method so that completing member names work
+    # well in Python REPLs like IPython.
+
     def import_(self, module):
         return self.eval("""eval(Module(), quote
         import {module}
