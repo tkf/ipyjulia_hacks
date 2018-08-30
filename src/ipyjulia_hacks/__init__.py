@@ -73,6 +73,6 @@ __version__ = "0.0.0"
 __author__ = "Takafumi Arakaki"
 __license__ = "MIT"
 
-from .core import initialize_api, get_api, \
-    initialize_main, get_main, \
+from .core import initialize_api, get_cached_api, \
+    initialize_main, get_cached_main, \
     jlfunction, revise

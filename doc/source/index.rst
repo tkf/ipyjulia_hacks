@@ -10,7 +10,7 @@ API
 
 .. automodule:: ipyjulia_hacks.core.wrappers
 .. autofunction:: ipyjulia_hacks.initialize_api
-.. autofunction:: ipyjulia_hacks.get_api
+.. autofunction:: ipyjulia_hacks.get_cached_api
 .. autoclass:: ipyjulia_hacks.core.JuliaAPI
    :members:
 

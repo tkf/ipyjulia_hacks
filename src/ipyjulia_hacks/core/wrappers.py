@@ -520,8 +520,8 @@ class JuliaCallback(object):
         return self.function(*args, **kwargs)
 
     def wrap(self, force=True):
-        from . import get_api
-        julia = get_api()
+        from . import get_cached_api
+        julia = get_cached_api()
 
         def function(*args, **kwargs):
             wargs = [julia.maybe_wrap(a) for a in args]
