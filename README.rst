@@ -12,11 +12,11 @@ The full notebook for the screenshot below can be found here_.
 .. _here:
    https://nbviewer.jupyter.org/gist/tkf/f46826bb21ea1377562428beed00a799
 
-.. image:: notebook.png
+.. image:: https://raw.githubusercontent.com/tkf/ipyjulia_hacks/master/notebook.png
    :align: center
    :alt: Julia in IPython kernel in Jupyter notebook
 
-.. image:: terminal.png
+.. image:: https://raw.githubusercontent.com/tkf/ipyjulia_hacks/master/terminal.png
    :align: center
    :alt: Julia in IPython terminal
 

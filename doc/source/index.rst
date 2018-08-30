@@ -2,6 +2,12 @@
  `ipyjulia_hacks`
 ==================
 
+.. automodule:: ipyjulia_hacks
+
+
+API
+===
+
 .. automodule:: ipyjulia_hacks.wrappers
 .. automodule:: ipyjulia_hacks.julia_api
 .. autofunction:: ipyjulia_hacks.initialize_api
