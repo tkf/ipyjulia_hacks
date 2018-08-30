@@ -9,7 +9,7 @@ except ImportError:
         pass  # Python 2?
 
 
-class Singleton:
+class Singleton(object):
 
     @classmethod
     def instance(cls, *args, **kwargs):
