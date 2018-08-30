@@ -53,8 +53,8 @@ class JuliaAPI(object):
         .. (this is for checking availability in doctest)
            >>> _ = getfixture("julia")
 
-        >>> from ipyjulia_hacks import get_api
-        >>> jlapi = get_api()
+        >>> from ipyjulia_hacks import initialize_api
+        >>> jlapi = initialize_api()
 
         By default, most of Julia objects returned by this function
         are the the Python wrapper `.JuliaObject`.  This object just
