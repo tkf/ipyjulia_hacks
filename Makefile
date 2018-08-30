@@ -7,6 +7,7 @@ all: test doc
 ## Testing
 test:
 	tox
+	PYJULIA_TEST_REBUILD=yes tox -e py2
 
 test-cov: test-cov-py3
 
