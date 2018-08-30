@@ -90,6 +90,60 @@ struct _jlwrap_type end  # a type that would be wrapped as jlwrap by PyCall
 
 get_jlwrap_prototype() = _jlwrap_type()
 
+struct PySlice
+    start
+    stop
+    step
+end
+
+struct PyEllipsis end
+
+pygetindex(x, indices...) =
+    getindex(x, convert_pyindices(x, indices)...)
+pysetindex!(x, value, indices...) =
+    setindex!(x, value, convert_pyindices(x, indices)...)
+
+function convert_pyindices(x, indices)
+    if applicable(firstindex, x, 1)
+        # arrays
+        return convert_pyindex.((x,),
+                                process_pyindices(ndims(x), indices),
+                                1:length(indices))
+    elseif indices isa Tuple{Integer} && applicable(firstindex, x)
+        # tuples, etc.
+        return (firstindex(x) + indices[1],)
+    else
+        # dictionaries, etc.
+        return indices
+    end
+end
+
+function process_pyindices(nd, indices)
+    colons = repeat([:], inner=nd - length(indices))
+    i = findfirst(i -> i isa PyEllipsis, indices)
+    if i === nothing
+        return (indices..., colons...)
+    else
+        return (indices[1:i - 1]..., colons..., ndices[i + 1:end]...)
+    end
+end
+
+convert_pyindex(x, i, ::Int) = i
+
+convert_pyindex(x, i::Integer, d::Int) = firstindex(x, d) + i
+
+function convert_pyindex(x, slice::PySlice, d::Int)
+    start = (slice.start === nothing ? 0 : slice.start) + firstindex(x, d)
+    stop = slice.stop === nothing ? lastindex(x, d) : slice.stop + 1
+    step = slice.step === nothing ? 1 : slice.step
+    if step == 1
+        return start:stop
+    else
+        return start:step:stop
+    end
+end
+
+
 @static if VERSION < v"0.7-"
     completions(_a...; __k...) = String[]
 else

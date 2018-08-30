@@ -62,9 +62,9 @@ array([ 9., 12.])
 1
 >>> nt.b
 2
->>> nt[1]
+>>> nt[0]
 1
->>> nt[2]
+>>> nt[1]
 2
 >>> len(nt)
 2
@@ -209,15 +209,24 @@ class JuliaObject(object):
     def __len__(self):
         return self.__julia.length(self.__jlwrap)
 
+    def __wrapkey(self, key):
+        if isinstance(key, slice):
+            return self.__julia.PySlice(key.start, key.stop, key.step)
+        elif key is Ellipsis:
+            return self.__julia.PyEllipsis()
+        return key
+
     def __getitem__(self, key):
         if not isinstance(key, tuple):
             key = (key,)
-        return self.__julia.getindex(self.__jlwrap, *key)
+        key = map(self.__wrapkey, key)
+        return self.__julia.pygetindex(self.__jlwrap, *key)
 
     def __setitem__(self, key, value):
         if not isinstance(key, tuple):
             key = (key,)
-        self.__julia.setindex_b(self.__jlwrap, value, *key)
+        key = map(self.__wrapkey, key)
+        self.__julia.pysetindex_b(self.__jlwrap, value, *key)
 
     def __delitem__(self, key):
         if not isinstance(key, tuple):
@@ -230,8 +239,8 @@ class JuliaObject(object):
         while True:
             if pair is None:
                 return
-            yield pair[1]
-            pair = iterate(self.__jlwrap, pair[2])
+            yield pair[0]
+            pair = iterate(self.__jlwrap, pair[1])
 
     def __reversed__(self):
         return self.__julia.eval("reverse")(self.__jlwrap)
