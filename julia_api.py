@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 
 from .wrappers import JuliaObject, autopeal, peal
@@ -30,7 +32,7 @@ class JuliaAPI(object):
         self.getproperty = self.getproperty_str
 
     @autopeal
-    def eval(self, code, *, wrap=None, **kwargs):
+    def eval(self, code, wrap=None, **kwargs):
         """
         Evaluate `code` in `Main` scope of Julia.
 
@@ -155,5 +157,7 @@ def banner(julia, **kwargs):
     io = IOBuffer()
     Base.banner(IOContext(io, :color=>true))
     String(take!(io))
-    """)
-    print(banner.rstrip(), **kwargs)
+    """).rstrip()
+    if sys.version_info.major == 2:
+        banner = banner.decode('utf8')
+    print(banner, **kwargs)

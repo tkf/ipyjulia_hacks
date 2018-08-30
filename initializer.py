@@ -1,4 +1,4 @@
-from pathlib import Path
+import os
 
 from .utils import Singleton, reloadall
 from .julia_api import JuliaAPI
@@ -13,13 +13,14 @@ def make_api(julia):
     julia : julia.Julia
         PyJulia's julia interface.
     """
-    julia_api_path = Path(__file__).parent.joinpath("julia_api.jl")
+    julia_api_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  "julia_api.jl")
     api, eval_str = julia.eval("""
     path -> let m = Module()
         Base.include(m, path)
         (m.JuliaAPI, m.JuliaAPI.eval_str)
     end
-    """)(str(julia_api_path))
+    """)(julia_api_path)
     return JuliaAPI(eval_str, api)
 
 

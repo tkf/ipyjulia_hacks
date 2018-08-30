@@ -1,6 +1,13 @@
+from __future__ import division
+
 import math
 
 from ..wrappers import JuliaObject
+
+try:
+    string_types = (unicode, str)
+except NameError:
+    string_types = (str,)
 
 
 def test_peal(Main):
@@ -37,7 +44,7 @@ def test_symbol_to_str(julia):
 
 def test_docstring(julia):
     sin = julia.eval("sin")
-    assert isinstance(sin.__doc__, str)
+    assert isinstance(sin.__doc__, string_types)
     assert "sine" in sin.__doc__
 
 

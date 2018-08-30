@@ -34,7 +34,8 @@ def itermodules(root, visited=None):
     for mod in vars(root).values():
         if isinstance(mod, ModuleType) and mod not in visited:
             yield mod
-            yield from itermodules(mod, visited)
+            for sub in itermodules(mod, visited):
+                yield sub
 
 
 def discover_singletons(modules, found=None):
