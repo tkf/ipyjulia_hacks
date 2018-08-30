@@ -1,6 +1,8 @@
 PROJECT = ipyjulia_hacks
 
-.PHONY: test clean clean-pycache doc inject-readme update-init upload
+.PHONY: all test clean clean-pycache doc inject-readme update-init upload
+
+all: test doc
 
 ## Testing
 test:
