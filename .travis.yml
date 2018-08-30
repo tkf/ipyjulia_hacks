@@ -1,7 +1,14 @@
 sudo: false
 language: python
-python:
-  - "3.6"
+
+matrix:
+  include:
+    - python: "3.6"
+
+    # Python 2 requires a special handling:
+    - python: "2.7"
+      env: TOXENV=py2
+
 env:
   global:
     # Use the Python version specified by Travis inside tox:
@@ -24,7 +31,7 @@ script:
   - tox -e doc -- -W
 
 after_success:
-  - .tox/py/bin/coverage combine .coverage
+  - .tox/py*/bin/coverage combine .coverage
   - coveralls
 
 notifications:
