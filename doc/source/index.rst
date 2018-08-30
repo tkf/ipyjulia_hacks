@@ -1,6 +1,14 @@
-======
- Demo
-======
+==================
+ `ipyjulia_hacks`
+==================
+
+.. automodule:: ipyjulia_hacks.wrappers
+.. automodule:: ipyjulia_hacks.julia_api
+.. autofunction:: ipyjulia_hacks.initialize_api
+.. autofunction:: ipyjulia_hacks.get_api
+.. autoclass:: ipyjulia_hacks.core.JuliaAPI
+   :members:
+
 
 Using ForwardDiff from Python
 =============================
