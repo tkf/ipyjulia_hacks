@@ -1,9 +1,14 @@
 from setuptools import setup, find_packages
+import sys
+
+packages = find_packages("src")
+if sys.version_info[0] == 2:
+    packages = [p for p in packages if p != "ipyjulia_hacks.ipy"]
 
 setup(
     name="ipyjulia_hacks",
     version="0.0.0",
-    packages=find_packages("src"),
+    packages=packages,
     package_dir={"": "src"},
     package_data={"ipyjulia_hacks": ["**/*.jl"]},
     author="Takafumi Arakaki",

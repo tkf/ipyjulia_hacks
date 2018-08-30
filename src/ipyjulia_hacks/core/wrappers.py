@@ -467,7 +467,7 @@ class JuliaObject(object):
                 if (mimetype.startswith("text/") or
                         mimetype in ("application/javascript",
                                      "image/svg+xml")):
-                    data = data.decode()
+                    data = data.decode('utf8')
                 elif mimetype == "application/json":
                     data = json.loads(data)
                 else:
