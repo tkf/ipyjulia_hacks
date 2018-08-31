@@ -15,8 +15,17 @@ API
    :members:
 
 
+Demos
+=====
+
+* Using Plots.jl etc. inside IPython Jupyter kernel: `Notebook <nb-plots.jl>`_
+
+.. _nb-plots.jl:
+   https://nbviewer.jupyter.org/gist/tkf/f46826bb21ea1377562428beed00a799
+
+
 Using ForwardDiff from Python
-=============================
+-----------------------------
 
 >>> from ipyjulia_hacks import get_main, jlfunction
 >>> @jlfunction

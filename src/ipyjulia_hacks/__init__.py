@@ -27,7 +27,7 @@ Features
 
 * `Julia's Multimedia I/O`_ hooked into `IPython's display system`_
 * Code completion inside Julia magic (by **monkey-patching** IPython)
-* Copy-free access to Julia objects from IPython
+* Copy-free access to Julia objects from Python
 
 Those are build on top of the great libraries PyCall.jl_ and PyJulia_.
 (It would be nice to merge some features to PyJulia_ at some point.

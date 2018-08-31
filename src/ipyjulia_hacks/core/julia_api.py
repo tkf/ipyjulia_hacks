@@ -137,7 +137,7 @@ class JuliaAPI(object):
 
     def getattr(self, obj, name):
         """
-        Get attribute (property) named `name` of Julia object `obj`.
+        Get attribute (property) named `name` of a Julia object `obj`.
         """
         try:
             return self.maybe_wrap(self.getproperty(obj, jl_name(name)))
