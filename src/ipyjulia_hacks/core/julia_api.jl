@@ -29,7 +29,8 @@ const NpyNumber = Union{
 
 
 _wrap(obj::Any) = pyjlwrap_new(obj)
-# Wrap the object if PyCall would convert it to some
+# Wrap the object if it is desirable to _not_ invoke PyCall's
+# automatic conversion.
 
 _wrap(obj::Union{
     Nothing,
