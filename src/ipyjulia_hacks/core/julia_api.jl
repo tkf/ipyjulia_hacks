@@ -3,6 +3,7 @@ module JuliaAPI
 using Compat
 using Compat.REPL
 using Compat.Dates
+using Compat.Pkg
 
 import PyCall
 using PyCall: PyObject, pyjlwrap_new
@@ -164,6 +165,36 @@ else
         else
             return String[]
         end
+    end
+end
+
+"""
+    start_repl(; <keyword arguments>)
+
+Start Julia REPL.
+
+# Keyword Arguments
+- `interactive::Bool = true`
+- `quiet::Bool = true`
+- `banner::Bool = false`
+- `history_file::Bool = true`
+- `color_set::Bool = false`: "color (configuration is already) set"
+"""
+function start_repl(;
+        interactive::Bool = true,
+        quiet::Bool = true,
+        banner::Bool = false,
+        history_file::Bool = true,
+        color_set::Bool = false,
+        )
+    was_interactive = Base.is_interactive
+    try
+        # Required for Pkg.__init__ to setup the REPL mode:
+        Base.eval(:(is_interactive = $interactive))
+
+        Base.run_main_repl(interactive, quiet, banner, history_file, color_set)
+    finally
+        Base.eval(:(is_interactive = $was_interactive))
     end
 end
 
