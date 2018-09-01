@@ -13,6 +13,8 @@ API
 .. autofunction:: ipyjulia_hacks.get_cached_api
 .. autoclass:: ipyjulia_hacks.core.JuliaAPI
    :members:
+.. autoclass:: ipyjulia_hacks.core.JuliaMain
+   :members:
 
 
 Demos
