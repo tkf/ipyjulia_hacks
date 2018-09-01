@@ -216,3 +216,19 @@ def test_constructor(julia):
     BitArray = julia.BitArray
     ba = BitArray([1, 0, 1, 0])
     assert isinstance(ba, JuliaObject)
+
+
+def test_figure(julia):
+    from matplotlib.figure import Figure
+
+    # Isolate the import step so that error message would be clearer:
+    julia.eval("import PyPlot")
+
+    obj = julia.eval("""
+    let obj = PyPlot.figure()
+        PyPlot.plot(1:10)
+        obj
+    end
+    """)  # default wrapping behavior
+
+    assert isinstance(obj, Figure)

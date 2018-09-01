@@ -7,6 +7,8 @@ using Compat.Dates
 import PyCall
 using PyCall: PyObject, pyjlwrap_new
 
+using Requires
+
 
 function eval_str(code::AbstractString;
                   scope::Module = Main,
@@ -162,6 +164,20 @@ else
         else
             return String[]
         end
+    end
+end
+
+
+function __init__()
+    # Don't wrap JuliaPy wrappers
+    @require Pandas="eadc2687-ae89-51f9-a5d9-86b5a6373a9c" @eval begin
+        _wrap(obj::Pandas.PandasWrapped) = obj
+    end
+    @require SymPy="24249f21-da20-56a4-8eb1-6a02cf4ae2e6" @eval begin
+        _wrap(obj::SymPy.SymbolicObject) = obj
+    end
+    @require PyPlot="d330b81b-6aea-500a-939a-2ce795aea3ee" @eval begin
+        _wrap(obj::PyPlot.Figure) = obj
     end
 end
 
