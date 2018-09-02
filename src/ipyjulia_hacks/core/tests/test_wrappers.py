@@ -218,6 +218,13 @@ def test_constructor(julia):
     assert isinstance(ba, JuliaObject)
 
 
+def test_io(julia):
+    io = julia.eval("io = IOBuffer()")
+    io.write("hello")
+    written = julia.eval("String(take!(io))")
+    assert written == "hello"
+
+
 def test_figure(julia):
     from matplotlib.figure import Figure
 

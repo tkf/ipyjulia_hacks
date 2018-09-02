@@ -42,6 +42,7 @@ _wrap(obj::Union{
     Array{<: NpyNumber},  # ditto
     AbstractString,  # should it be just String?
     Dates.AbstractTime,
+    IO,
 }) = obj
 # It's OK to include some types that are not supported PyCall.  In
 # that case, those objects are passed through pyjlwrap_new anyway.
