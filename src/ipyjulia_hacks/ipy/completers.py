@@ -1,4 +1,3 @@
-from types import SimpleNamespace
 import re
 
 from IPython.core.completer import Completion, IPCompleter
@@ -15,36 +14,6 @@ class JuliaCompleter(Singleton):
         self.magic_re = re.compile(r".*(\s|^)%%?julia\s*")
         # With this regexp, "=%julia Cha<tab>" won't work.  But maybe
         # it's better to be conservative here.
-
-    @cached_property
-    def jlcomplete_texts(self):
-        return self.julia.eval("""
-        import REPL
-        (str, pos) -> begin
-            ret, _, should_complete =
-                REPL.completions(str, pos)
-            if should_complete
-                return map(REPL.completion_text, ret)
-            else
-                return []
-            end
-        end
-        """)
-
-    def complete_command(self, ip, event):
-        pos = event.line.find("%julia")
-        if pos < 0:
-            return []
-        pos += len("%julia")  # pos: beginning of Julia code
-        julia_code = event.line[pos:]
-        julia_pos = len(event.text_until_cursor) - pos
-
-        completions = self.jlcomplete_texts(julia_code, julia_pos)
-        if "." in event.symbol:
-            # When completing (say) "Base.s" we need to add the prefix "Base."
-            prefix = event.symbol.rsplit(".", 1)[0]
-            completions = [".".join((prefix, c)) for c in completions]
-        return completions
 
     @cached_property
     def jlcomplete(self):
@@ -77,7 +46,6 @@ class JuliaCompleter(Singleton):
         # if not should_complete:
         #     return []
         return completions
-
 
 
 class IPCompleterPatcher(Singleton):
