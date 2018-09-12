@@ -167,7 +167,7 @@ class JuliaMain(object):
     """
     An alias to `.JuliaAPI.eval`.
     """
-    # "doc=..." is for IPython.  The literal docstring is for Python.
+    # "doc=..." is for IPython.  The literal docstring is for Sphinx.
 
     def __setattr__(self, name, value):
         if name.startswith('_'):
