@@ -1,8 +1,6 @@
 import asyncio
-import warnings
 
 from julia import magic
-import IPython
 
 from ..core import get_api, banner
 
@@ -17,24 +15,23 @@ class JuliaMagicsEnhanced(magic.JuliaMagics):
         banner(self._julia)
 
 
-async def julia_eventloop(julia):
+async def polling_julia():
+    from julia.Base import sleep
     while True:
-        julia.eval("sleep(0)")
+        sleep(0)
         await asyncio.sleep(0.05)
 
 
-def start_julia_eventloop():
-    if int(IPython.__version__.split(".", 1)[0]) < 7:
-        warnings.warn("Julia event loop is not running in IPython < v7")
-        return
-
-    asyncio.ensure_future(julia_eventloop(get_api()))
+def maybe_start_polling_julia():
+    if asyncio.get_event_loop().is_running():
+        # asyncio is running (inside ipykernel?).  Let's start polling.
+        asyncio.ensure_future(polling_julia())
 
 
 def load_ipython_extension(ip):
     ip.register_magics(JuliaMagicsEnhanced)
 
-    start_julia_eventloop()
+    maybe_start_polling_julia()
 
     from . import completers
     completers.patch_ipcompleter()  # monkey patch to make cell magics work
