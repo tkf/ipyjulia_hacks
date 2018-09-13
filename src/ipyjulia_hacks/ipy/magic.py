@@ -22,11 +22,14 @@ async def polling_julia():
         sleep(0)
         await asyncio.sleep(0.05)
 
+future_polling_julia = None
+
 
 def maybe_start_polling_julia():
+    global future_polling_julia
     if asyncio.get_event_loop().is_running():
         # asyncio is running (inside ipykernel?).  Let's start polling.
-        asyncio.ensure_future(polling_julia())
+        future_polling_julia = asyncio.ensure_future(polling_julia())
 
 
 def maybe_patch_stdio():
