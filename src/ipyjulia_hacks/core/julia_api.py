@@ -152,6 +152,17 @@ class JuliaAPI(object):
         except Exception:
             raise AttributeError(name)
 
+    def connect_stdio(self):
+        def make_receiver(io):
+            def receiver(s):
+                io.write(s)
+                io.flush()
+            return receiver
+
+        self.IOPiper.pipe_std_outputs(
+            make_receiver(sys.stdout),
+            make_receiver(sys.stderr))
+
 
 class JuliaMain(object):
 

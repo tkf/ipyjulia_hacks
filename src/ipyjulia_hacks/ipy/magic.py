@@ -1,4 +1,5 @@
 import asyncio
+import sys
 
 from julia import magic
 
@@ -28,10 +29,23 @@ def maybe_start_polling_julia():
         asyncio.ensure_future(polling_julia())
 
 
+def maybe_patch_stdio():
+    if "ipykernel" not in sys.modules:
+        return
+
+    from ipykernel.iostream import OutStream
+    if not isinstance(sys.stdout, OutStream):
+        return
+
+    julia = get_api()
+    julia.connect_stdio()
+
+
 def load_ipython_extension(ip):
     ip.register_magics(JuliaMagicsEnhanced)
 
     maybe_start_polling_julia()
+    maybe_patch_stdio()
 
     from . import interactiveshell
     interactiveshell.patch_interactiveshell(ip)
