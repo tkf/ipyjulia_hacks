@@ -33,6 +33,9 @@ def load_ipython_extension(ip):
 
     maybe_start_polling_julia()
 
+    from . import interactiveshell
+    interactiveshell.patch_interactiveshell(ip)
+
     from . import completers
     completers.patch_ipcompleter()  # monkey patch to make cell magics work
 # See:
