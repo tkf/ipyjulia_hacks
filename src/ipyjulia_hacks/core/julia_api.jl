@@ -188,6 +188,11 @@ function start_repl(;
         history_file::Bool = true,
         color_set::Bool = false,
         )
+    if !(stdout isa Base.TTY)
+        error("stdout is not a TTY")
+    elseif !(stdin isa Base.TTY)
+        error("stdin is not a TTY")
+    end
     was_interactive = Base.is_interactive
     try
         # Required for Pkg.__init__ to setup the REPL mode:
