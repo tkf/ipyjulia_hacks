@@ -123,6 +123,8 @@ from types import FunctionType
 import functools
 import json
 
+from .config import IPyJuliaHacks
+
 
 unspecified = object()
 
@@ -162,6 +164,7 @@ class JuliaObject(object):
     def __init__(self, jlwrap, julia):
         self.__jlwrap = jlwrap
         self.__julia = julia
+        self.__config = IPyJuliaHacks.instance()
 
     def __str__(self):
         return self.__julia.string(self.__jlwrap)
@@ -446,7 +449,7 @@ class JuliaObject(object):
         return self.__julia.eval("ceil")(self.__jlwrap)
 
     def _repr_mimebundle_(self, include=None, exclude=None):
-        mimes = include or [
+        mimes = include or self.__config.mime_include or [
             "text/plain",
             "text/html",
             "text/markdown",
@@ -458,7 +461,7 @@ class JuliaObject(object):
             "image/jpeg",
             "image/svg+xml",
         ]
-        exclude = exclude or []
+        exclude = exclude or self.__config.mime_exclude
 
         showable = self.__julia.eval("showable")
         showraw = self.__julia.eval("""

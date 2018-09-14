@@ -4,6 +4,7 @@ import sys
 from julia import magic
 
 from ..core import get_api, banner
+from ..core.config import IPyJuliaHacks
 
 
 class JuliaMagicsEnhanced(magic.JuliaMagics):
@@ -45,10 +46,13 @@ def maybe_patch_stdio():
 
 
 def load_ipython_extension(ip):
+    config = IPyJuliaHacks.instance()
+
     ip.register_magics(JuliaMagicsEnhanced)
 
     maybe_start_polling_julia()
-    maybe_patch_stdio()
+    if config.patch_stdio:
+        maybe_patch_stdio()
 
     from . import interactiveshell
     interactiveshell.patch_interactiveshell(ip)

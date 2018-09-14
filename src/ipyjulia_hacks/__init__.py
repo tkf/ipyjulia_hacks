@@ -76,3 +76,4 @@ __license__ = "MIT"
 from .core import get_api, get_cached_api, \
     get_main, get_cached_main, \
     jlfunction, revise
+from .core.config import IPyJuliaHacks
