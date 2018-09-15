@@ -214,7 +214,7 @@ class JuliaMain(object):
         """
         Run ``import <module>`` in an anonymous module and return ``<module>``.
         """
-        return self.eval("""eval(Module(), quote
+        return self.eval("""Base.eval(Module(), quote
         import {module}
         {module}
         end)

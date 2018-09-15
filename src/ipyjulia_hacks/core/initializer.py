@@ -16,6 +16,7 @@ class APIInitializer(Singleton):
         """
         from julia.core import Julia
         julia = Julia(*args, **kwargs)
+        julia.eval("@eval Main import Base.MainInclude: eval, include")
 
         julia_api_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "julia_api.jl")

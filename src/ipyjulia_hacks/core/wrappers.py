@@ -11,7 +11,7 @@ Pythonic wrapper of Julia objects.
 
 **Mutables**:
 
->>> spam = jlapi.eval('''eval(Module(), quote
+>>> spam = jlapi.eval('''Base.eval(Module(), quote
 ... mutable struct Spam
 ...     egg
 ... end
