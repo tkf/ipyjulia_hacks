@@ -1,6 +1,8 @@
 import asyncio
+import re
 import sys
 
+from IPython.core.magic import line_cell_magic
 from julia import magic
 
 from ..core import get_api, banner
@@ -15,6 +17,16 @@ class JuliaMagicsEnhanced(magic.JuliaMagics):
         # Replace core.Julia with JuliaAPI:
         self._julia = get_api()
         banner(self._julia)
+
+    @line_cell_magic
+    def julia(self, line, cell=None):
+        src = line if cell is None else cell
+        src = re.sub(r"^ *\?", "@doc ", src)
+        if cell is None:
+            line = src
+        else:
+            cell = src
+        return super().julia(line, cell)
 
 
 async def polling_julia():
