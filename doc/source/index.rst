@@ -39,8 +39,8 @@ Using ForwardDiff from Python
 array([2., 2.])
 
 
-`asyncio` integration
----------------------
+Fake `asyncio` integration
+--------------------------
 
 Executable scripts of the following examples can be fond in
 `examples directory`_.
