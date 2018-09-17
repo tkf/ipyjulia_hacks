@@ -36,14 +36,15 @@ class AsyncJuliaAPI:
         return self.sync.eval("""
         debug -> func -> function(args...; kwargs...)
             chan = Channel(1)
-            task = @async begin
+            task = @async try
                 debug("Calling $func($args...; $kwargs...)")
                 ans = func(args...; kwargs...)
                 debug("typeof(ans) = $ans")
-                put!(chan, ans)
+                put!(chan, (true, ans))
+            catch err
+                put!(chan, (false, err))
             end
             debug("task = $task")
-            bind(chan, task)
             debug("chan = $chan")
             return chan
         end""")(logger.debug)
@@ -55,7 +56,11 @@ class AsyncJuliaAPI:
             self.sync.sleep(0.05)
             await asyncio.sleep(0)
         logger.debug("It's ready. Calling: take!(%s)", chan)
-        return self.sync.take_b(chan)
+        ok, ans = self.sync.take_b(chan)
+        if ok:
+            return ans
+        else:
+            raise RuntimeError(ans)
 
     def wrapcall(self, callee, *args, **kwargs):
         afun = self._async_wrapper(peal(callee))
