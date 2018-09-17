@@ -7,7 +7,7 @@ def jl_repeat(ajl, name, num):
     return ajl.eval(rf"""
         for i in 1:{num}
             print("{name} i = $i\n")
-            # Using `print` instead of `println` here to let Julia to write
+            # Using `print` instead of `println` here to force Julia to write
             # everything "at once".
             sleep(0.1)
         end
