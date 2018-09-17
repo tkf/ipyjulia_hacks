@@ -1,9 +1,12 @@
 import asyncio
 
-from ..core import JuliaAPI, get_api
+from cached_property import cached_property
+
+from ..core import get_api
+from ..core.wrappers import peal
 
 
-class AsyncJuliaAPI(JuliaAPI):
+class AsyncJuliaAPI:
 
     """
     Asynchronous interface to Julia.
@@ -22,26 +25,33 @@ class AsyncJuliaAPI(JuliaAPI):
         self.__pyloopinterface = value
     """
 
-    async def eval_async(self, src, *kwargs):
-        chan = self.eval(f"""
-        let chan = Channel(1)
+    def __init__(self, sync=None):
+        self.sync = sync or get_api()
+
+    @cached_property
+    def _async_wrapper(self):
+        return self.sync.eval("""func -> function(args...; kwargs...)
+            chan = Channel(1)
             task = @async begin
-                ans = let
-                    {src}
-                end
+                ans = func(args...; kwargs...)
                 put!(chan, ans)
             end
             bind(chan, task)
-            chan
-        end
-        """)
-        while not self.isready(chan):
-            self.sleep(0.05)
-            await asyncio.sleep(0)
-        return self.take_b(chan)
+            return chan
+        end""")
 
-    @classmethod
-    def from_api(cls, api=None):
-        if api is None:
-            api = get_api()
-        return cls(api.eval_str, api.api)
+    async def _wait_async(self, chan):
+        while not self.sync.isready(chan):
+            self.sync.sleep(0.05)
+            await asyncio.sleep(0)
+        return self.sync.take_b(chan)
+
+    def wrapcall(self, callee, *args, **kwargs):
+        afun = self._async_wrapper(peal(callee))
+        chan = self.sync.wrapcall(peal(afun), *args, **kwargs)
+        return self._wait_async(chan)
+
+    def eval(self, src):
+        return self.wrapcall(self.sync.include_string,
+                             peal(self.sync.Main),
+                             src)
