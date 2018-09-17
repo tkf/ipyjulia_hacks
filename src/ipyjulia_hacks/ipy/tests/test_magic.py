@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ....core.wrappers import JuliaObject
+from ...core.wrappers import JuliaObject
 
 
 def test_line_magic_simple(ipy_with_magic):

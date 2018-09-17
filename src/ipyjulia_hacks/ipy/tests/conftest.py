@@ -2,7 +2,7 @@ from IPython.testing.globalipapp import get_ipython
 import pytest
 
 from .. import magic
-from ....core.conftest import julia
+from ...core.conftest import julia
 
 if False:
     julia()
