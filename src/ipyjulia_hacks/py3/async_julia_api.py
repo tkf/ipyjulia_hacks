@@ -48,6 +48,7 @@ class AsyncJuliaAPI:
             debug("chan = $chan")
             return chan
         end""")(logger.debug)
+    # TODO: Make debug(...) a no-op when debugging log is not used.
 
     async def _wait_async(self, chan):
         logger.debug("Waiting for %s", chan)
@@ -72,3 +73,6 @@ class AsyncJuliaAPI:
         return self.wrapcall(self.sync.include_string,
                              peal(self.sync.Main),
                              src)
+
+    # TODO: Above usages of `peal` should not be required.  Maybe
+    # apply `@autopeal` to `JuliaAPI.wrapcall`?
