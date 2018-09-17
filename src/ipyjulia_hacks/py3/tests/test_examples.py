@@ -10,5 +10,5 @@ example_modules = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("module", example_modules)
-async def test_some_asyncio_code(module):
+async def test_some_asyncio_code(module, julia):
     await module.main()
