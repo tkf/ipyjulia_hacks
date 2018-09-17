@@ -1,13 +1,26 @@
 sudo: false
 language: python
 
-matrix:
+jobs:
   include:
+
     - python: "3.6"
 
     # Python 2 requires a special handling:
     - python: "2.7"
       env: TOXENV=py2
+
+    # Documentation is build on readthedocs but it's nicer to let
+    # Travis report when it breaks:
+    - stage: doc
+      python: "3.6"
+      os: linux
+      before_install:
+        - pip install --quiet tox
+        - tox -e doc --notest
+      script:
+        - tox -e doc -- -W
+      after_success: skip
 
 env:
   global:
@@ -33,18 +46,6 @@ script:
 after_success:
   - .tox/py*/bin/coverage combine .coverage
   - coveralls
-
-jobs:
-  include:
-    - stage: doc
-      python: "3.6"
-      os: linux
-      before_install:
-        - pip install --quiet tox
-        - tox -e doc --notest
-      script:
-        - tox -e doc -- -W
-      after_success: skip
 
 notifications:
   email: false
