@@ -1,9 +1,12 @@
+from logging import getLogger
 import asyncio
 
 from cached_property import cached_property
 
 from ..core import get_api
 from ..core.wrappers import peal
+
+logger = getLogger("async_julia_api")
 
 
 class AsyncJuliaAPI:
@@ -30,20 +33,28 @@ class AsyncJuliaAPI:
 
     @cached_property
     def _async_wrapper(self):
-        return self.sync.eval("""func -> function(args...; kwargs...)
+        return self.sync.eval("""
+        debug -> func -> function(args...; kwargs...)
             chan = Channel(1)
             task = @async begin
+                debug("Calling $func($args...; $kwargs...)")
                 ans = func(args...; kwargs...)
+                debug("typeof(ans) = $ans")
                 put!(chan, ans)
             end
+            debug("task = $task")
             bind(chan, task)
+            debug("chan = $chan")
             return chan
-        end""")
+        end""")(logger.debug)
 
     async def _wait_async(self, chan):
+        logger.debug("Waiting for %s", chan)
         while not self.sync.isready(chan):
+            logger.debug("Not ready: %s", chan)
             self.sync.sleep(0.05)
             await asyncio.sleep(0)
+        logger.debug("It's ready. Calling: take!(%s)", chan)
         return self.sync.take_b(chan)
 
     def wrapcall(self, callee, *args, **kwargs):
