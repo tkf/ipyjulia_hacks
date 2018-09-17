@@ -1,7 +1,7 @@
 sudo: false
 language: python
 
-jobs:
+matrix:
   include:
 
     - python: "3.6"
@@ -12,9 +12,8 @@ jobs:
 
     # Documentation is build on readthedocs but it's nicer to let
     # Travis report when it breaks:
-    - stage: doc
+    - name: doc
       python: "3.6"
-      os: linux
       before_install:
         - pip install --quiet tox
         - tox -e doc --notest
