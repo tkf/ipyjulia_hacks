@@ -3,7 +3,10 @@ import sys
 
 packages = find_packages("src")
 if sys.version_info[0] == 2:
-    packages = [p for p in packages if p != "ipyjulia_hacks.ipy"]
+    packages = [p for p in packages if not p.startswith((
+        "ipyjulia_hacks.ipy",
+        "ipyjulia_hacks.py3",
+    ))]
 
 setup(
     name="ipyjulia_hacks",
