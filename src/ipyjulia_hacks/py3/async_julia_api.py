@@ -51,9 +51,10 @@ class AsyncJuliaAPI:
 
     async def _wait_async(self, chan):
         logger.debug("Waiting for %s", chan)
+        jl_yield = self.sync.eval("yield", wrap=False)
         while not self.sync.isready(chan):
             logger.debug("Not ready: %s", chan)
-            self.sync.sleep(0.05)
+            jl_yield()
             await asyncio.sleep(0)
         logger.debug("It's ready. Calling: take!(%s)", chan)
         ok, ans = self.sync.take_b(chan)
