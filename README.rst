@@ -44,9 +44,8 @@ Julia objects.)
 Installation
 ============
 
-Pretty much everything has to be installed from development version::
+``ipyjulia_hacks`` requires the development of PyJulia_::
 
-  pip install https://github.com/ipython/ipython/archive/master.zip#egg=ipython
   pip install https://github.com/JuliaPy/pyjulia/archive/master.zip#egg=julia
   pip install https://github.com/tkf/ipyjulia_hacks/archive/master.zip#egg=ipyjulia_hacks
 
