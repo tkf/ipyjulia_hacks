@@ -27,6 +27,12 @@ Features
 
 * `Julia's Multimedia I/O`_ hooked into `IPython's display system`_
 * Code completion inside Julia magic (by **monkey-patching** IPython)
+* ``@async`` works in Jupyter (Julia's event loop is integrated to
+  ipykernel's asyncio event loop)
+* ``print`` works in Jupyter (Julia's standard streams are integrated
+  to ipykernel's I/O)
+* Syntax highlighting works in ``%%julia`` magic of ``ipython`` CLI
+  (but not in Jupyter)
 * Copy-free access to Julia objects from Python
 
 Those are build on top of the great libraries PyCall.jl_ and PyJulia_.
@@ -49,6 +55,12 @@ Installation
 
   pip install https://github.com/JuliaPy/pyjulia/archive/master.zip#egg=julia
   pip install https://github.com/tkf/ipyjulia_hacks/archive/master.zip#egg=ipyjulia_hacks
+
+IPython extension usage
+-----------------------
+::
+
+  %load_ext ipyjulia_hacks.ipy.magic
 
 
 .. budges
