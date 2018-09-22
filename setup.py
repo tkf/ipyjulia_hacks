@@ -29,6 +29,7 @@ setup(
     install_requires=[
         "cached-property",
         "traitlets",
+        'ipython>=7.0.0b1;python_version>="3.4"',
     ],
     # entry_points={
     #     "console_scripts": ["PROGRAM_NAME = ipyjulia_hacks.cli:main"],
