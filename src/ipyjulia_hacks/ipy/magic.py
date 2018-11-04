@@ -1,6 +1,7 @@
 import asyncio
 import re
 import sys
+import warnings
 
 from IPython.core.magic import line_cell_magic
 from julia import magic
@@ -57,6 +58,18 @@ def maybe_patch_stdio():
     julia.connect_stdio()
 
 
+def enable_revise(ip):
+    get_api()
+    try:
+        from julia.Revise import revise
+    except ImportError:
+        warnings.warn("Failed to import Revise.jl")
+        return
+
+    ip.events.register("pre_execute", lambda: revise())
+    # Note that `lambda` is required to bypass signature check.
+
+
 def load_ipython_extension(ip):
     config = IPyJuliaHacks.instance()
 
@@ -65,6 +78,9 @@ def load_ipython_extension(ip):
     maybe_start_polling_julia()
     if config.patch_stdio:
         maybe_patch_stdio()
+
+    if config.enable_revise:
+        enable_revise(ip)
 
     from . import interactiveshell
     interactiveshell.patch_interactiveshell(ip)

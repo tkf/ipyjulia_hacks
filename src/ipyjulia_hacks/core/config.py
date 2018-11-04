@@ -16,6 +16,11 @@ class IPyJuliaHacks(SingletonConfigurable):
         help="Try patching Julia's stdio if it makes sense.",
     ).tag(config=True)
 
+    enable_revise = Bool(
+        True,
+        help="Enable Revise.jl",
+    ).tag(config=True)
+
     mime_include = List(
         Unicode,
         [],
