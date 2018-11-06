@@ -27,6 +27,7 @@ setup(
         # see: http://pypi.python.org/pypi?%3Aaction=list_classifiers
     ],
     install_requires=[
+        "julia>=0.2",
         "cached-property",
         "traitlets",
         'ipython>=7.0.0b1;python_version>="3.4"',
