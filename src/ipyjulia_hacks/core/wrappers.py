@@ -145,6 +145,42 @@ def broadcast_iop(julia, fcode, a, b):
     broadcast_b(f, a, a, b)
 
 
+def itersubs(include, exclude):
+    return (m for m in include if m not in exclude)
+
+
+def showablemimes(is_showable, config, include, exclude):
+    include = include or config.mime_include
+    exclude = exclude or config.mime_exclude
+
+    if include:
+        for m in filter(is_showable, itersubs(include, exclude)):
+            yield m
+        return
+
+    image_mimes = [
+        "image/png",
+        "image/jpeg",
+        "image/svg+xml",
+        "application/pdf",
+    ]
+    nonimage_mimes = [
+        "text/plain",
+        "text/html",
+        "text/markdown",
+        "text/latex",
+        "application/json",
+        "application/javascript",
+    ]
+
+    for mimetype in filter(is_showable, itersubs(image_mimes, exclude)):
+        yield mimetype
+        break  # include ONLY ONE image mime
+
+    for mimetype in filter(is_showable, itersubs(nonimage_mimes, exclude)):
+        yield mimetype
+
+
 class JuliaObject(object):
     """
     Python interface for Julia object.
@@ -449,20 +485,6 @@ class JuliaObject(object):
         return self.__julia.eval("ceil")(self.__jlwrap)
 
     def _repr_mimebundle_(self, include=None, exclude=None):
-        mimes = include or self.__config.mime_include or [
-            "text/plain",
-            "text/html",
-            "text/markdown",
-            "text/latex",
-            "application/json",
-            "application/javascript",
-            "application/pdf",
-            "image/png",
-            "image/jpeg",
-            "image/svg+xml",
-        ]
-        exclude = exclude or self.__config.mime_exclude
-
         showable = self.__julia.eval("showable")
         showraw = self.__julia.eval("""
         (obj, mimetype) -> begin
@@ -472,21 +494,23 @@ class JuliaObject(object):
         end
         """)
 
+        def is_showable(mimetype):
+            return showable(mimetype, self.__jlwrap)
+
+        all_mimes = showablemimes(is_showable, self.__config, include, exclude)
+
         format_dict = {}
-        for mimetype in mimes:
-            if mimetype in exclude:
-                continue
-            if showable(mimetype, self.__jlwrap):
-                data = showraw(self.__jlwrap, mimetype)
-                if (mimetype.startswith("text/") or
-                        mimetype in ("application/javascript",
-                                     "image/svg+xml")):
-                    data = data.decode('utf8')
-                elif mimetype == "application/json":
-                    data = json.loads(data)
-                else:
-                    data = bytes(data)
-                format_dict[mimetype] = data
+        for mimetype in all_mimes:
+            data = showraw(self.__jlwrap, mimetype)
+            if (mimetype.startswith("text/") or
+                    mimetype in ("application/javascript",
+                                 "image/svg+xml")):
+                data = data.decode('utf8')
+            elif mimetype == "application/json":
+                data = json.loads(data)
+            else:
+                data = bytes(data)
+            format_dict[mimetype] = data
         return format_dict
 
 # https://ipython.readthedocs.io/en/stable/api/generated/IPython.core.formatters.html#IPython.core.formatters.DisplayFormatter.format

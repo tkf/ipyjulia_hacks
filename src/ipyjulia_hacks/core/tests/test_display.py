@@ -28,6 +28,5 @@ def test_mimebundle_pyplot(julia):
     mimes = set(format_dict)
     assert mimes >= {
         "text/plain",
-        "application/pdf",
         "image/png",
     }
