@@ -58,6 +58,10 @@ def maybe_patch_stdio():
     julia.connect_stdio()
 
 
+run_revise = False
+revise_errors = 0
+
+
 def enable_revise(ip):
     get_api()
     try:
@@ -66,7 +70,27 @@ def enable_revise(ip):
         warnings.warn("Failed to import Revise.jl")
         return
 
-    ip.events.register("pre_execute", lambda: revise())
+    def revise_wrapper():
+        ok = False
+        try:
+            revise()
+            ok = True
+        finally:
+            global revise_errors
+            if ok:
+                revise_errors = 0
+            else:
+                revise_errors += 1
+                if revise_errors > 5:
+                    print("Turning off revise.")
+                    print("Run `", __name__, ".run_revise = True` to reenable.", sep="")
+                    global run_revise
+                    run_revise = False
+
+    global run_revise, revise_errors
+    run_revise = True
+    revise_errors = 0
+    ip.events.register("pre_execute", revise_wrapper)
     # Note that `lambda` is required to bypass signature check.
 
 
