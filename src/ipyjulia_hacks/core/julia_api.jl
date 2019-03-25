@@ -27,7 +27,7 @@ end
 
 
 const NpyNumber = Union{
-    (t for t in values(PyCall.npy_typestrs) if t <: Number)...
+    (t for t in values(PyCall.standard_typestrs) if t <: Number)...
 }
 
 
